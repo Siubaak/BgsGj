@@ -41,7 +41,7 @@ module.exports = app => {
       if (id) result = await ctx.service.user.removeById(id);
       else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_params', msg: '参数错误' };
+        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
         return;
       }
       if (result) ctx.status = 204;

@@ -13,7 +13,8 @@ module.exports = app => {
     }
     async create(ctx) {
       ctx.validate({
-        body: { type: 'string' },
+        title: { type: 'string' },
+        content: { type: 'string' },
       });
       const result = await ctx.service.note.create(ctx.request.body);
       ctx.status = 201;
@@ -22,13 +23,13 @@ module.exports = app => {
     }
     async update(ctx) {
       ctx.validate({
-        note: { type: 'object' },
+        _id: { type: 'string' },
       });
       const result = await ctx.service.note.update(ctx.request.body);
-      if (result) ctx.status = 204;
+      if (result.result.ok) ctx.status = 204;
       else {
-        ctx.status = 403;
-        ctx.body = { code: 'auth:user_not_found', msg: '用户名或密码错误' };
+        ctx.status = 400;
+        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
       }
     }
     async remove(ctx) {
@@ -37,7 +38,7 @@ module.exports = app => {
       if (id) result = await ctx.service.note.removeById(id);
       else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_params', msg: '参数错误' };
+        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
         return;
       }
       if (result) ctx.status = 204;

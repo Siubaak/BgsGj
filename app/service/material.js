@@ -5,7 +5,7 @@ module.exports = app => {
     async find({ all, skip = 0, limit = 0 }) {
       let model = app.model.Material.find().sort({ type: 1 });
       if (all) model = model.skip(skip).limit(limit);
-      const materials = await model;
+      let materials = await model;
       for (const material of materials) {
         const matbItems = await app.model.Matbitem.find({
           materialId: material._id,

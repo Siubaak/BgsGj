@@ -23,11 +23,11 @@ module.exports = app => {
       ctx.status = 200;
       ctx.body = result;
     }
-    async create(ctx) {
+    create() {
     }
-    async update(ctx) {
+    update() {
     }
-    async remove(ctx) {
+    remove() {
     }
   };
 };

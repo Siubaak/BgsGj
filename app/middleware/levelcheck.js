@@ -33,9 +33,9 @@ module.exports = levels => {
     ctx.state.level = user.level;
     if (Array.isArray(levels) && levels.indexOf(user.level) !== -1) return next();
     else if (typeof levels === 'number' && levels <= user.level) return next();
-    else {
-      ctx.status = 403;
-      ctx.body = { code: 'auth:no_perm', msg: '权限不足' };
-    }
+
+    ctx.status = 403;
+    ctx.body = { code: 'auth:no_perm', msg: '权限不足' };
+
   };
 };

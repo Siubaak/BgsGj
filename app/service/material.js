@@ -2,13 +2,10 @@
 
 module.exports = app => {
   return class extends app.Service {
-    async find({ findAll, skip = 0, limit = 0 }) {
-      let materials;
-      if (!findAll) materials = await app.model.Material.find().sort({ type: 1 });
-      else {
-        materials = await app.model.Material.find().sort({ type: 1 }).skip(skip)
-          .limit(limit);
-      }
+    async find({ all, skip = 0, limit = 0 }) {
+      let model = app.model.Material.find().sort({ type: 1 });
+      if (all) model = model.skip(skip).limit(limit);
+      const materials = await model;
       for (const material of materials) {
         const matbItems = await app.model.Matbitem.find({
           materialId: material._id,
@@ -26,7 +23,7 @@ module.exports = app => {
         }
         material.left = material.quantity - book;
       }
-      if (!findAll) materials = materials.filter(material => { return material.left > 0; });
+      if (!all) materials = materials.filter(material => { return material.left > 0; });
       return materials;
     }
     async create(material) {

@@ -19,7 +19,7 @@ module.exports = app => {
     async findById(id) {
       return await app.model.Metbook.findById(id);
     }
-    async getTime() {
+    async getUsage() {
       const metBooks = await app.model.Metbook.find({ cond: '预约' });
       const times = {};
       metBooks.forEach(metBook => { times[`${metBook.date}${metBook.time}`] = true; });

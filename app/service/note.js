@@ -8,6 +8,9 @@ module.exports = app => {
     async findById(id) {
       return await app.model.Note.findById(id);
     }
+    async findByTitle(title) {
+      return await app.model.Note.findOne({ title });
+    }
     async create(note) {
       return await app.model.Note.create(note);
     }

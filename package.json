@@ -37,11 +37,11 @@
     "autod": "autod"
   },
   "ci": {
-    "version": "6, 8"
+    "version": "8"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Siubaak/BgsGj"
   },
   "author": "Siubaak",
   "license": "MIT"

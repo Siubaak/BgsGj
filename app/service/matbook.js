@@ -17,7 +17,8 @@ module.exports = app => {
               $or: [{ cond: '预约' }, { cond: '借出' }],
             });
         }
-      })().populate('user', 'account').sort({ _id: -1 })
+      })()
+        .populate('user', 'account').sort({ _id: -1 })
         .skip(skip)
         .limit(limit);
       for (const matBook of matBooks) {

@@ -27,8 +27,7 @@ module.exports = app => {
       if (result.result.ok) ctx.status = 204;
       else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
-        return;
+        ctx.body = { code: 'error:material_not_found', msg: '该物资不存在' };
       }
     }
     async remove(ctx) {

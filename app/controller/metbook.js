@@ -23,11 +23,44 @@ module.exports = app => {
       ctx.status = 200;
       ctx.body = result;
     }
-    create() {
+    async create(ctx) {
+      ctx.validate({
+        user: { type: 'string' },
+        name: { type: 'string' },
+        phone: { type: 'string' },
+        date: { type: 'string' },
+        time: { type: 'string' },
+      });
+      const result = await ctx.service.metbook.create(ctx.request.body);
+      ctx.status = 201;
+      ctx.set('Location', '/api/metbook?id=' + result._id);
+      ctx.body = { id: result._id };
     }
-    update() {
+    async update(ctx) {
+      ctx.validate({
+        _id: { type: 'string' },
+      });
+      const result = await ctx.service.metbook.update(ctx.request.body);
+      if (result.result.ok) ctx.status = 204;
+      else {
+        ctx.status = 400;
+        ctx.body = { code: 'error:metbook_not_found', msg: '该会议室预约申请不存在' };
+      }
     }
-    remove() {
+    async remove(ctx) {
+      const { id } = ctx.query;
+      let result;
+      if (id) result = await ctx.service.metbook.removeById(id);
+      else {
+        ctx.status = 400;
+        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        return;
+      }
+      if (result) ctx.status = 204;
+      else {
+        ctx.status = 400;
+        ctx.body = { code: 'error:metbook_not_found', msg: '该会议室预约申请不存在' };
+      }
     }
   };
 };

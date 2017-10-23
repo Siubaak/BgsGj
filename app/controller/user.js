@@ -29,7 +29,7 @@ module.exports = app => {
       });
       if (ctx.status.level < 4) ctx.request.body.user._id = ctx.request.body.id;
       const result = await ctx.service.user.update(ctx.request.body);
-      if (result) ctx.status = 204;
+      if (result.result.ok) ctx.status = 204;
       else {
         ctx.status = 403;
         ctx.body = { code: 'auth:user_not_found', msg: '用户名或密码错误' };

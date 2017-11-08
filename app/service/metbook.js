@@ -29,7 +29,7 @@ module.exports = app => {
       const isBook = await app.model.Metbook.findOne({ date: metBook.date, time: metBook.time, cond: '预约' });
       if (!isBook) {
         const metBooksNum = await app.model.Metbook.count({ user: metBook.user, cond: '预约' });
-        if (metBooksNum < app.config.maxMeetingBook) return app.model.Metbook.create(metBook);
+        if (metBooksNum < app.config.maxMetBooks) return app.model.Metbook.create(metBook);
       }
       return false;
     }

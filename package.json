@@ -5,11 +5,10 @@
   "private": true,
   "dependencies": {
     "egg": "^1.8.0",
+    "egg-jwt": "^2.2.0",
     "egg-mongoose": "^2.1.1",
     "egg-scripts": "^1.2.0",
-    "egg-validate": "^1.0.0",
-    "jsonwebtoken": "^8.1.0",
-    "sha1": "^1.1.1"
+    "egg-validate": "^1.0.0"
   },
   "devDependencies": {
     "autod": "^2.9.0",

@@ -9,6 +9,7 @@ module.exports = app => {
       });
       const token = await ctx.service.token.create(ctx.request.body);
       if (token) {
+        ctx.status = 201;
         ctx.body = { token };
         return;
       }

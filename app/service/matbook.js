@@ -33,7 +33,7 @@ module.exports = app => {
 
 
       const matBooksNum = await app.model.Matbook.count({ user: matBook.user, $or: [{ cond: '预约' }, { cond: '借出' }] });
-      if (matBooksNum < app.config.maxMaterialBook) {
+      if (matBooksNum < app.config.maxMatBooks) {
         const matBookId = (await app.model.Matbook.create(matBook)).insertedIds[0];
         matbItems.forEach(matbItem => { matbItem.matBook = matBookId; });
         return await app.model.Matbitem.create(matbItems);

@@ -1,7 +1,5 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
-
 module.exports = levels => {
   return async (ctx, next) => {
     // 是否授权并携带jwt
@@ -12,7 +10,7 @@ module.exports = levels => {
     }
     // 解密jwt
     const token = ctx.headers.authorization.split(' ')[1];
-    const decoded = jwt.decode(token, ctx.app.config.jwtSecret);
+    const decoded = ctx.app.jwt.decode(token, ctx.app.config.jwtSecret);
     // jwt是否过期
     if (decoded.exp < Date.now()) {
       ctx.status = 403;
@@ -30,7 +28,7 @@ module.exports = levels => {
     user.lastSeen = new Date();
     await ctx.service.user.update({ _id: decoded.id, lastSeen: new Date() });
     // 判断权限
-    ctx.state.level = user.level;
+    ctx.state.user = user;
     if (Array.isArray(levels) && levels.indexOf(user.level) !== -1) return next();
     else if (typeof levels === 'number' && levels <= user.level) return next();
 

@@ -7,7 +7,7 @@ module.exports = app => {
       let result;
       if (id) result = await ctx.service.matbook.findById(id);
       else {
-        const query = { skip, limit };
+        const query = { skip: Number(skip), limit: Number(limit) };
         switch (ctx.state.level) {
           case 4:
             break;

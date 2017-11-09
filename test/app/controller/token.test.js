@@ -3,7 +3,7 @@
 const { app, assert } = require('egg-mock/bootstrap');
 const sha1 = require('../../../lib/sha1');
 
-describe('test/app/service/token.test.js', () => {
+describe('test/app/controller/token.test.js', () => {
   it('should have no users', async () => {
     await app.model.User.remove();
     const result = await app.model.User.count();
@@ -23,8 +23,6 @@ describe('test/app/service/token.test.js', () => {
     const result = await app.model.User.create({
       account: 'test',
       password: sha1('test'),
-      creator: '5a014b4ef5ea8e590f0d31da',
-      created: new Date(),
     });
     assert(typeof result === 'object' && result._id);
     await app.httpRequest()
@@ -37,7 +35,7 @@ describe('test/app/service/token.test.js', () => {
       });
   });
 
-  it('should get a token', async () => {
+  it('should create a token', async () => {
     app.mockCsrf();
     await app.httpRequest()
       .post('/api/tokens')

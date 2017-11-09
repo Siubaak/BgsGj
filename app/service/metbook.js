@@ -17,7 +17,7 @@ module.exports = app => {
         .limit(limit);
     }
     async findById(id) {
-      return await app.model.Metbook.findById(id);
+      return await app.model.Metbook.findById(id) || {};
     }
     async getUsage() {
       const metBooks = await app.model.Metbook.find({ cond: '预约' });

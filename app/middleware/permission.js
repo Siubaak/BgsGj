@@ -24,16 +24,11 @@ module.exports = levels => {
       ctx.body = { code: 'auth:user_not_found', msg: '用户不存在' };
       return;
     }
-    // 更新用户登录时间
-    user.lastSeen = new Date();
-    await ctx.service.user.update({ _id: decoded.id, lastSeen: new Date() });
     // 判断权限
     ctx.state.user = user;
     if (Array.isArray(levels) && levels.indexOf(user.level) !== -1) return next();
     else if (typeof levels === 'number' && levels <= user.level) return next();
-
     ctx.status = 403;
     ctx.body = { code: 'auth:no_perm', msg: '权限不足' };
-
   };
 };

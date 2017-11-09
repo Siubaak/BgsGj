@@ -7,7 +7,7 @@ module.exports = app => {
       let result;
       if (id) result = await ctx.service.note.findById(id);
       else if (title) result = await ctx.service.note.findByTitle(title);
-      else result = await ctx.service.note.find({ skip, limit });
+      else result = await ctx.service.note.find({ skip: Number(skip), limit: Number(limit) });
       ctx.status = 200;
       ctx.body = result;
     }
@@ -17,8 +17,9 @@ module.exports = app => {
         content: { type: 'string' },
       });
       const result = await ctx.service.note.create(ctx.request.body);
+      ctx.logger.info(`[note] user-${ctx.state.user.id} created a note-${result._id}`);
       ctx.status = 201;
-      ctx.set('Location', '/api/note?id=' + result._id);
+      ctx.set('Location', '/api/notes?id=' + result._id);
       ctx.body = { id: result._id };
     }
     async update(ctx) {
@@ -26,8 +27,10 @@ module.exports = app => {
         _id: { type: 'string' },
       });
       const result = await ctx.service.note.update(ctx.request.body);
-      if (result.result.ok) ctx.status = 204;
-      else {
+      if (result && result.ok) {
+        ctx.logger.info(`[note] user-${ctx.state.user.id} updated a note-${ctx.request.body._id}`);
+        ctx.status = 204;
+      } else {
         ctx.status = 400;
         ctx.body = { code: 'error:bad_request', msg: '参数错误' };
       }
@@ -41,8 +44,10 @@ module.exports = app => {
         ctx.body = { code: 'error:bad_request', msg: '参数错误' };
         return;
       }
-      if (result) ctx.status = 204;
-      else {
+      if (result) {
+        ctx.logger.info(`[note] user-${ctx.state.user.id} removed a note-${id}`);
+        ctx.status = 204;
+      } else {
         ctx.status = 400;
         ctx.body = { code: 'error:note_not_found', msg: '该通知不存在' };
       }

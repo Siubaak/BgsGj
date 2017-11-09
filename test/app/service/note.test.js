@@ -5,14 +5,14 @@ let id;
 
 describe('test/app/service/note.test.js', () => {
   it('should have no notes', async () => {
-    const ctx = app.mockContext({ state: { user: { _id: '5a014b4ef5ea8e590f0d31da' } } });
+    const ctx = app.mockContext({ state: { user: { id: '5a014b4ef5ea8e590f0d31da' } } });
     await app.model.Note.remove();
     const result = await ctx.service.note.count();
     assert(result === 0);
   });
 
   it('should create normally', async () => {
-    const ctx = app.mockContext({ state: { user: { _id: '5a014b4ef5ea8e590f0d31da' } } });
+    const ctx = app.mockContext({ state: { user: { id: '5a014b4ef5ea8e590f0d31da' } } });
     let result = await ctx.service.note.create({ title: 'test0', content: 'test0' });
     assert(typeof result === 'object' && result._id);
     result = await ctx.service.note.create({ title: 'test1', content: 'test1' });
@@ -23,7 +23,7 @@ describe('test/app/service/note.test.js', () => {
   });
 
   it('should find normally', async () => {
-    const ctx = app.mockContext({ state: { user: { _id: '5a014b4ef5ea8e590f0d31da' } } });
+    const ctx = app.mockContext({ state: { user: { id: '5a014b4ef5ea8e590f0d31da' } } });
     let result = await ctx.service.note.find({});
     assert(result.length === 2);
     result = await ctx.service.note.find({ skip: 1 });
@@ -39,7 +39,7 @@ describe('test/app/service/note.test.js', () => {
   });
 
   it('should update normally', async () => {
-    const ctx = app.mockContext({ state: { user: { _id: '5a014b4ef5ea8e590f0d31da' } } });
+    const ctx = app.mockContext({ state: { user: { id: '5a014b4ef5ea8e590f0d31da' } } });
     await ctx.service.note.update({
       _id: id,
       title: 'test2',
@@ -49,7 +49,7 @@ describe('test/app/service/note.test.js', () => {
   });
 
   it('should remove normally', async () => {
-    const ctx = app.mockContext({ state: { user: { _id: '5a014b4ef5ea8e590f0d31da' } } });
+    const ctx = app.mockContext({ state: { user: { id: '5a014b4ef5ea8e590f0d31da' } } });
     await ctx.service.note.removeById(id);
     let result = await ctx.service.note.count();
     assert(result === 1);

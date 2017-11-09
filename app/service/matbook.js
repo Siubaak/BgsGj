@@ -27,7 +27,7 @@ module.exports = app => {
       return matBooks;
     }
     async findById(id) {
-      return await app.model.Matbook.findById(id);
+      return await app.model.Matbook.findById(id) || {};
     }
     async create({ matBook, matbItems }) {
 

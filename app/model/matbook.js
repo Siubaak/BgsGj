@@ -10,7 +10,7 @@ module.exports = app => {
     takeDate: { type: Date, required: true },
     returnDate: { type: Date, required: true },
     remark: String,
-    cond: { type: String, enum: [ '预约', '借出', '归还', '作废' ], default: '预约' },
+    cond: { type: Number, enum: [ 0, 1, 2, 3 ], default: 0 }, // 0为预约，1为借出，2为归还，3为作废
   });
   return app.mongoose.model('Matbook', MatbookSchema);
 };

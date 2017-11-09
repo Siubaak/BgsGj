@@ -10,8 +10,6 @@ module.exports = app => {
     level: { type: Number, enum: [ 0, 1, 2, 3, 4 ], default: 0 },
     reName: String, // 账号负责人姓名
     rePhone: String, // 账号负责人电话
-    created: Date,
-    lastSeen: Date,
   });
   return app.mongoose.model('User', UserSchema);
 };

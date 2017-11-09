@@ -4,7 +4,7 @@ module.exports = app => {
   return class extends app.Controller {
     async get(ctx) {
       const { skip, limit } = ctx.query;
-      const query = ctx.state.level === 4 ? { all: true, skip, limit } : { all: false };
+      const query = ctx.state.level === 4 ? { all: true, skip: Number(skip), limit: Number(limit) } : { all: false };
       const result = await ctx.service.material.find(query);
       ctx.status = 200;
       ctx.body = result;
@@ -16,7 +16,7 @@ module.exports = app => {
       });
       const result = await ctx.service.material.create(ctx.request.body);
       ctx.status = 201;
-      ctx.set('Location', '/api/material?id=' + result._id);
+      ctx.set('Location', '/api/materials?id=' + result._id);
       ctx.body = { id: result._id };
     }
     async update(ctx) {
@@ -24,7 +24,7 @@ module.exports = app => {
         _id: { type: 'string' },
       });
       const result = await ctx.service.material.update(ctx.request.body);
-      if (result.result.ok) ctx.status = 204;
+      if (result && result.ok) ctx.status = 204;
       else {
         ctx.status = 400;
         ctx.body = { code: 'error:material_not_found', msg: '该物资不存在' };

@@ -8,7 +8,7 @@ module.exports = app => {
       if (id) result = await ctx.service.metbook.findById(id);
       else if (usage) result = await ctx.service.metbook.getUsage();
       else {
-        const query = { skip, limit };
+        const query = { skip: Number(skip), limit: Number(limit) };
         switch (ctx.state.level) {
           case 4:
             break;
@@ -33,7 +33,7 @@ module.exports = app => {
       });
       const result = await ctx.service.metbook.create(ctx.request.body);
       ctx.status = 201;
-      ctx.set('Location', '/api/metbook?id=' + result._id);
+      ctx.set('Location', '/api/metbooks?id=' + result._id);
       ctx.body = { id: result._id };
     }
     async update(ctx) {
@@ -41,7 +41,7 @@ module.exports = app => {
         _id: { type: 'string' },
       });
       const result = await ctx.service.metbook.update(ctx.request.body);
-      if (result.result.ok) ctx.status = 204;
+      if (result && result.ok) ctx.status = 204;
       else {
         ctx.status = 400;
         ctx.body = { code: 'error:metbook_not_found', msg: '该会议室预约申请不存在' };

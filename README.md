@@ -19,25 +19,32 @@
 ### tokens资源 /api/tokens
 
 | HTTP动词 | 查询参数 | 请求体参数         |
-| ------- | ------- | ----------------- |
+| ------- | ------- | ---------------- |
 | post    | 无      | account, password |
 
 ### users资源 /api/users
 
-| HTTP动词 | 查询参数 | 请求体参数         |
-| ------- | ------- | ----------------- |
-| get     | id, account, skip, limit      | 无 |
-|      | id, account, skip, limit      | 无 |
+| HTTP动词 | 查询参数                  | 请求体参数                                |
+| ------- | ------------------------ | ---------------------------------------- |
+| get     | id, account, skip, limit | 无                                       |
+| post    | 无                       | 见[用户数据结构](#用户)                     |
+| put     | 无                       | id, password, [user(见用户数据结构)](#用户) |
+| del     | id                       | 无                                       |
 
 ## 数据结构（Model Schema）
 
+### 通知
+
 ```js
-// 通知
 note: {
   title: { type: String, required: true },  // 通知标题
   content: { type: String, required: true },  // 通知内容
 }
-// 用户
+```
+
+### 用户
+
+```js
 user: {
   account: { type: String, required: true },  // 用户账号，对于部门用户为部门名称
   password: { type: String, required: true }, // 用户密码
@@ -49,7 +56,11 @@ user: {
   created: Date,  // 用户常见时间
   lastSeen: Date, // 用户最后登录时间
 }
-// 物资
+```
+
+### 物资
+
+```js
 material: {
   type: { type: String, required: true }, // 物资类型
   name: { type: String, required: true }, // 物资名称
@@ -57,7 +68,11 @@ material: {
   unit: { type: String, default: '个' }, // 物资单位
   price: { type: Number, default: 0 },  // 物资价格
 }
-// 物资申请
+```
+
+### 物资申请
+
+```js
 matbook: {
   // 用户ID
   user: { type: app.mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
@@ -71,7 +86,11 @@ matbook: {
   // 物资申请状态
   cond: { type: String, enum: [ '预约', '借出', '归还', '作废' ], default: '预约' },
 }
-// 物资申请单项物资
+```
+
+### 物资申请单项物资
+
+```js
 matbitem: {
   // 用户ID
   user: { type: app.mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
@@ -83,7 +102,11 @@ matbitem: {
   // 物资申请状态
   cond: { type: String, enum: [ '预约', '借出', '归还', '作废' ], default: '预约' },
 }
-// 会议室预约
+```
+
+### 会议室预约
+
+```js
 metbook: {
   // 用户ID
   user: { type: app.mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },

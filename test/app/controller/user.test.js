@@ -1,7 +1,6 @@
 'use strict';
 
 const { app, assert } = require('egg-mock/bootstrap');
-const sha1 = require('../../../lib/sha1');
 const levelNum = 5;
 const token = [];
 const id = [];
@@ -20,10 +19,11 @@ describe('test/app/controller/user.test.js', () => {
 
   it('should post normally', async () => {
     let result;
+    const ctx = app.mockContext();
     for (let i = 0; i < levelNum; i++) {
       result = await app.model.User.create({
         account: `test${i}`,
-        password: sha1(`test${i}`),
+        password: ctx.helper.sha1(`test${i}`),
         level: i,
       });
       assert(typeof result === 'object' && result._id);

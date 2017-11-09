@@ -1,7 +1,6 @@
 'use strict';
 
 const { app, assert } = require('egg-mock/bootstrap');
-const sha1 = require('../../../lib/sha1');
 
 describe('test/app/service/token.test.js', () => {
   it('should have no users', async () => {
@@ -16,7 +15,7 @@ describe('test/app/service/token.test.js', () => {
     assert(typeof token !== 'string' && token === null);
     const result = await app.model.User.create({
       account: 'test',
-      password: sha1('test'),
+      password: ctx.helper.sha1('test'),
     });
     assert(typeof result === 'object' && result._id);
     token = await ctx.service.token.create({ account: 'test', password: 'test0' });

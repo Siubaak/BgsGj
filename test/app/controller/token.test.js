@@ -1,7 +1,6 @@
 'use strict';
 
 const { app, assert } = require('egg-mock/bootstrap');
-const sha1 = require('../../../lib/sha1');
 
 describe('test/app/controller/token.test.js', () => {
   it('should have no users', async () => {
@@ -20,9 +19,10 @@ describe('test/app/controller/token.test.js', () => {
         code: 'auth:user_not_found',
         msg: '用户名或密码错误',
       });
+    const ctx = app.mockContext();
     const result = await app.model.User.create({
       account: 'test',
-      password: sha1('test'),
+      password: ctx.helper.sha1('test'),
     });
     assert(typeof result === 'object' && result._id);
     await app.httpRequest()

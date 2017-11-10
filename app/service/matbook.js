@@ -43,18 +43,19 @@ module.exports = app => {
         let price = 0;
         for (const material of matBook.materials) {
           const mat = await app.model.Material.findById(material.material);
+          if (!mat) return { code: 'error:material_not_found', msg: '物资不存在' };
           let left = mat.quantity - material.book;
           if (matBooks[material.material]) left -= matBooks[material.material];
-          if (left < 0) return null;
+          if (left < 0) return { code: 'error:insufficient_material', msg: '物资数量不足' };
           price += material.book * mat.price;
         }
         const user = await app.model.User.findById(matBook.user);
-        if (user.wallet < price) return null;
+        if (user.wallet < price) return { code: 'error:insufficient_balance', msg: '用户钱包余额不足' };
         matBook.price = price;
         await app.model.User.update({ _id: matBook.user }, { $inc: { wallet: -price } });
         return await app.model.Matbook.create(matBook);
       }
-      return null;
+      return { code: 'error:max_matbook', msg: '物资申请次数已满' };
     }
     async update(matBook) {
       this.ctx.helper.delProps(matBook, [ 'user', 'price', 'takeDate', 'returnDate', 'materials' ]);
@@ -62,9 +63,7 @@ module.exports = app => {
         const matB = await app.model.Matbook.findById(matBook._id);
         if (!matB || matB.cond > matBook.cond) return null;
         if (matB.cond === 0 && matBook.cond === 3) {
-          console.log(await app.model.User.findById(matB.user));
           await app.model.User.update({ _id: matB.user }, { $inc: { wallet: matB.price } });
-          console.log(await app.model.User.findById(matB.user));
         }
       }
       return await app.model.Matbook.findOneAndUpdate({ _id: matBook._id }, { $set: matBook }, { new: true });

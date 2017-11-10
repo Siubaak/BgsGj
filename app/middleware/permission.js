@@ -17,7 +17,7 @@ module.exports = levels => {
       ctx.body = { code: 'auth:auth_expire', msg: '授权已过期' };
       return;
     }
-    // 数据库是否存在该用户
+    // 数据库是否存在用户
     const user = await ctx.service.user.findById(decoded.id);
     if (!user) {
       ctx.status = 403;

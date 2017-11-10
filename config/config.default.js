@@ -4,6 +4,7 @@ module.exports = appInfo => {
   const config = exports = {};
   config.keys = appInfo.name + '_1506565858794_5840';
   config.middleware = [];
+  config.security = { csrf: { ignoreJSON: true } };
 
   // 数据库配置
   config.mongoose = {

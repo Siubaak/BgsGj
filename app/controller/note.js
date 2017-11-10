@@ -27,8 +27,8 @@ module.exports = app => {
         _id: { type: 'string' },
       });
       const result = await ctx.service.note.update(ctx.request.body);
-      if (result && result.ok) {
-        ctx.logger.info(`[note] user-${ctx.state.user.id} updated a note-${ctx.request.body._id}`);
+      if (result) {
+        ctx.logger.info(`[note] user-${ctx.state.user.id} updated a note-${result._id}`);
         ctx.status = 204;
       } else {
         ctx.status = 400;
@@ -45,7 +45,7 @@ module.exports = app => {
         return;
       }
       if (result) {
-        ctx.logger.info(`[note] user-${ctx.state.user.id} removed a note-${id}`);
+        ctx.logger.info(`[note] user-${ctx.state.user.id} removed a note-${result._id}`);
         ctx.status = 204;
       } else {
         ctx.status = 400;

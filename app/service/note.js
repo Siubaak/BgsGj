@@ -18,7 +18,7 @@ module.exports = app => {
       return await app.model.Note.create(note);
     }
     async update(note) {
-      return await app.model.Note.update({ _id: note._id }, { $set: note });
+      return await app.model.Note.findOneAndUpdate({ _id: note._id }, { $set: note }, { new: true });
     }
     async removeById(_id) {
       return await app.model.Note.remove({ _id });

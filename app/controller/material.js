@@ -14,10 +14,15 @@ module.exports = app => {
         name: { type: 'string' },
       });
       const result = await ctx.service.material.create(ctx.request.body);
-      ctx.logger.info(`[material] user-${ctx.state.user.id} created a material-${result._id}`);
-      ctx.status = 201;
-      ctx.set('Location', '/api/materials?id=' + result._id);
-      ctx.body = { id: result._id };
+      if (result && result._id) {
+        ctx.logger.info(`[material] user-${ctx.state.user.id} created a material-${result._id}`);
+        ctx.status = 201;
+        ctx.set('Location', '/api/materials?id=' + result._id);
+        ctx.body = { id: result._id };
+      } else {
+        ctx.status = 400;
+        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+      }
     }
     async update(ctx) {
       ctx.validate({
@@ -29,7 +34,7 @@ module.exports = app => {
         ctx.status = 204;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:material_not_found', msg: '该物资不存在' };
+        ctx.body = { code: 'error:material_not_found', msg: '物资不存在' };
       }
     }
     async remove(ctx) {
@@ -46,7 +51,7 @@ module.exports = app => {
         ctx.status = 204;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:material_not_found', msg: '该物资不存在' };
+        ctx.body = { code: 'error:material_not_found', msg: '物资不存在' };
       }
     }
   };

@@ -17,10 +17,15 @@ module.exports = app => {
         password: { type: 'string' },
       });
       const result = await ctx.service.user.create(ctx.request.body);
-      ctx.logger.info(`[user] user-${ctx.state.user.id} created a user-${result._id}`);
-      ctx.status = 201;
-      ctx.set('Location', '/api/users?id=' + result._id);
-      ctx.body = { id: result._id, account: result.account };
+      if (result && result._id) {
+        ctx.logger.info(`[user] user-${ctx.state.user.id} created a user-${result._id}`);
+        ctx.status = 201;
+        ctx.set('Location', '/api/users?id=' + result._id);
+        ctx.body = { id: result._id, account: result.account };
+      } else {
+        ctx.status = 400;
+        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+      }
     }
     async update(ctx) {
       ctx.validate({
@@ -52,7 +57,7 @@ module.exports = app => {
         ctx.status = 204;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:user_not_found', msg: '该用户不存在' };
+        ctx.body = { code: 'error:user_not_found', msg: '用户不存在' };
       }
     }
   };

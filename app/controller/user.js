@@ -30,8 +30,8 @@ module.exports = app => {
       });
       if (ctx.state.user.level < 4) ctx.request.body.user._id = ctx.request.body.id;
       const result = await ctx.service.user.update(ctx.request.body);
-      if (result && result.ok) {
-        ctx.logger.info(`[user] user-${ctx.state.user.id} updated a user-${ctx.request.body._id}`);
+      if (result) {
+        ctx.logger.info(`[user] user-${ctx.state.user.id} updated a user-${result._id}`);
         ctx.status = 204;
       } else {
         ctx.status = 403;
@@ -48,7 +48,7 @@ module.exports = app => {
         return;
       }
       if (result) {
-        ctx.logger.info(`[user] user-${ctx.state.user.id} removed a user-${id}`);
+        ctx.logger.info(`[user] user-${ctx.state.user.id} removed a user-${result._id}`);
         ctx.status = 204;
       } else {
         ctx.status = 400;

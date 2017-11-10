@@ -23,15 +23,14 @@ module.exports = app => {
     async update({ id, password, user }) {
       const info = await app.model.User.findById(id);
       if (info && info.password === this.ctx.helper.sha1(password)) {
-        return await app.model.User.update({ _id: user._id }, { $set: user });
+        return await app.model.User.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
       }
-      return false;
+      return null;
     }
     async removeById(_id) {
       return await Promise.all([
         app.model.User.remove({ _id }),
         app.model.Matbook.remove({ user: _id }),
-        app.model.Matbitem.remove({ user: _id }),
         app.model.Metbook.remove({ user: _id }),
       ]);
     }

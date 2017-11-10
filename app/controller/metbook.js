@@ -41,7 +41,7 @@ module.exports = app => {
         _id: { type: 'string' },
       });
       const result = await ctx.service.metbook.update(ctx.request.body);
-      if (result && result.ok) ctx.status = 204;
+      if (result) ctx.status = 204;
       else {
         ctx.status = 400;
         ctx.body = { code: 'error:metbook_not_found', msg: '该会议室预约申请不存在' };

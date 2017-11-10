@@ -61,7 +61,7 @@ module.exports = app => {
       this.ctx.helper.delProps(matBook, [ 'user', 'price', 'takeDate', 'returnDate', 'materials' ]);
       if (matBook.cond) {
         const matB = await app.model.Matbook.findById(matBook._id);
-        if (!matB || matB.cond > matBook.cond) return null;
+        if (!matB || matB.cond > matBook.cond) return { code: 'error:invalid_condition', msg: '非法状态更新' };
         if (matB.cond === 0 && matBook.cond === 3) {
           await app.model.User.update({ _id: matB.user }, { $inc: { wallet: matB.price } });
         }

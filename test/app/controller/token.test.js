@@ -12,13 +12,10 @@ describe('test/app/controller/token.test.js', () => {
   it('should get auth:user_not_found', async () => {
     app.mockCsrf();
     await app.httpRequest()
-      .post('/api/tokens')
+      .post(`${app.config.prefix}/tokens`)
       .send({ account: 'test', password: 'test' })
-      .expect(403)
-      .expect({
-        code: 'auth:user_not_found',
-        msg: '用户名或密码错误',
-      });
+      .expect(400)
+      .expect(app.config.ERROR.USER.NOEXIST);
     const ctx = app.mockContext();
     const result = await app.model.User.create({
       account: 'test',
@@ -26,19 +23,16 @@ describe('test/app/controller/token.test.js', () => {
     });
     assert(typeof result === 'object' && result._id);
     await app.httpRequest()
-      .post('/api/tokens')
+      .post(`${app.config.prefix}/tokens`)
       .send({ account: 'test', password: 'test0' })
-      .expect(403)
-      .expect({
-        code: 'auth:user_not_found',
-        msg: '用户名或密码错误',
-      });
+      .expect(400)
+      .expect(app.config.ERROR.USER.INVALID);
   });
 
   it('should create a token', async () => {
     app.mockCsrf();
     await app.httpRequest()
-      .post('/api/tokens')
+      .post(`${app.config.prefix}/tokens`)
       .send({ account: 'test', password: 'test' })
       .expect(201)
       .expect(res => assert(typeof res.body.token === 'string' && res.body.token));

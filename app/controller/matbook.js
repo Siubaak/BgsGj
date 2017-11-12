@@ -35,19 +35,48 @@ module.exports = app => {
       if (result && result._id) {
         ctx.logger.info(`[matbook] user-${ctx.state.user.id} created a material book-${result._id}`);
         ctx.status = 201;
-        ctx.set('Location', '/api/matbooks?id=' + result._id);
+        ctx.set('Location', `${ctx.app.config.prefix}/matbooks?id=${result._id}`);
         ctx.body = { id: result._id };
-      } else if (result) {
+      } else if (result && result.err) {
         ctx.status = 400;
         ctx.body = result;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
-    update() {
+    async update(ctx) {
+      ctx.validate({
+        _id: { type: 'string' },
+      });
+      const result = await ctx.service.matbook.update(ctx.request.body);
+      if (result && result._id) {
+        ctx.logger.info(`[matbook] user-${ctx.state.user.id} updated a material book-${result._id}`);
+        ctx.status = 204;
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
+      } else {
+        ctx.status = 400;
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
+      }
     }
-    remove() {
+    async remove(ctx) {
+      const { id } = ctx.query;
+      let result;
+      if (id) result = await ctx.service.metbook.removeById(id);
+      else {
+        ctx.status = 400;
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
+        return;
+      }
+      if (result && result.result && result.result.n && result.result.ok) {
+        ctx.logger.info(`[matbook] user-${ctx.state.user.id} removed a material book-${result._id}`);
+        ctx.status = 204;
+      } else {
+        ctx.status = 400;
+        ctx.body = ctx.app.config.ERROR.MATBOOK.NOEXIST;
+      }
     }
   };
 };

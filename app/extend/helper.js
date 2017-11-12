@@ -13,8 +13,6 @@ module.exports = {
     return result;
   },
   delProps(obj, keys) {
-    for (const key of keys) {
-      delete obj[key];
-    }
+    for (const key of keys) delete obj[key];
   },
 };

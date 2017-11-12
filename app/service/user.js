@@ -22,10 +22,9 @@ module.exports = app => {
     }
     async update({ id, password, user }) {
       const info = await app.model.User.findById(id);
-      if (info && info.password === this.ctx.helper.sha1(password)) {
-        return await app.model.User.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
-      }
-      return null;
+      if (!info) return app.config.ERROR.USER.NOEXIST;
+      if (this.ctx.helper.sha1(password) !== info.password) return app.config.ERROR.USER.INVALID;
+      return await app.model.User.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
     }
     async removeById(_id) {
       return await Promise.all([

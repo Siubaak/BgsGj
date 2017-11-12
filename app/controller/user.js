@@ -20,11 +20,14 @@ module.exports = app => {
       if (result && result._id) {
         ctx.logger.info(`[user] user-${ctx.state.user.id} created a user-${result._id}`);
         ctx.status = 201;
-        ctx.set('Location', '/api/users?id=' + result._id);
+        ctx.set('Location', `${ctx.app.config.prefix}/users?id=${result._id}`);
         ctx.body = { id: result._id, account: result.account };
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async update(ctx) {
@@ -35,12 +38,15 @@ module.exports = app => {
       });
       if (ctx.state.user.level < 4) ctx.request.body.user._id = ctx.request.body.id;
       const result = await ctx.service.user.update(ctx.request.body);
-      if (result) {
+      if (result && result._id) {
         ctx.logger.info(`[user] user-${ctx.state.user.id} updated a user-${result._id}`);
         ctx.status = 204;
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
       } else {
-        ctx.status = 403;
-        ctx.body = { code: 'auth:user_not_found', msg: '用户名或密码错误' };
+        ctx.status = 400;
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async remove(ctx) {
@@ -49,15 +55,15 @@ module.exports = app => {
       if (id) result = await ctx.service.user.removeById(id);
       else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
         return;
       }
-      if (result) {
+      if (result[0] && result[0].result && result[0].result.n && result[0].result.ok) {
         ctx.logger.info(`[user] user-${ctx.state.user.id} removed a user-${result._id}`);
         ctx.status = 204;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:user_not_found', msg: '用户不存在' };
+        ctx.body = ctx.app.config.ERROR.USER.NOEXIST;
       }
     }
   };

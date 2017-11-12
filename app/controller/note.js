@@ -20,11 +20,14 @@ module.exports = app => {
       if (result && result._id) {
         ctx.logger.info(`[note] user-${ctx.state.user.id} created a note-${result._id}`);
         ctx.status = 201;
-        ctx.set('Location', '/api/notes?id=' + result._id);
+        ctx.set('Location', `${ctx.app.config.prefix}/notes?id=${result._id}`);
         ctx.body = { id: result._id };
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async update(ctx) {
@@ -32,12 +35,15 @@ module.exports = app => {
         _id: { type: 'string' },
       });
       const result = await ctx.service.note.update(ctx.request.body);
-      if (result) {
+      if (result && result._id) {
         ctx.logger.info(`[note] user-${ctx.state.user.id} updated a note-${result._id}`);
         ctx.status = 204;
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async remove(ctx) {
@@ -46,15 +52,15 @@ module.exports = app => {
       if (id) result = await ctx.service.note.removeById(id);
       else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
         return;
       }
-      if (result) {
+      if (result && result.result && result.result.n && result.result.ok) {
         ctx.logger.info(`[note] user-${ctx.state.user.id} removed a note-${result._id}`);
         ctx.status = 204;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:note_not_found', msg: '通知不存在' };
+        ctx.body = ctx.app.config.ERROR.NOTE.NOEXIST;
       }
     }
   };

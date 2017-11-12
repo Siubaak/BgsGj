@@ -7,6 +7,7 @@ module.exports = app => {
     quantity: { type: Number, default: 0 },
     unit: { type: String, default: '个' },
     price: { type: Number, default: 0 },
+    enable: { type: Boolean, default: true },
   });
   return app.mongoose.model('Material', MaterialSchema);
 };

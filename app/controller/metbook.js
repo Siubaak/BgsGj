@@ -3,10 +3,9 @@
 module.exports = app => {
   return class extends app.Controller {
     async get(ctx) {
-      const { id, usage, skip, limit } = ctx.query;
+      const { id, skip, limit } = ctx.query;
       let result;
       if (id) result = await ctx.service.metbook.findById(id);
-      else if (usage) result = await ctx.service.metbook.getUsage();
       else {
         const query = { skip: Number(skip), limit: Number(limit) };
         switch (ctx.state.user.level) {
@@ -33,12 +32,16 @@ module.exports = app => {
       });
       const result = await ctx.service.metbook.create(ctx.request.body);
       if (result && result._id) {
+        ctx.logger.info(`[metbook] user-${ctx.state.user.id} created a meeting book-${result._id}`);
         ctx.status = 201;
-        ctx.set('Location', '/api/metbooks?id=' + result._id);
+        ctx.set('Location', `${ctx.app.config.prefix}/metbooks?id=${result._id}`);
         ctx.body = { id: result._id };
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async update(ctx) {
@@ -46,10 +49,15 @@ module.exports = app => {
         _id: { type: 'string' },
       });
       const result = await ctx.service.metbook.update(ctx.request.body);
-      if (result) ctx.status = 204;
-      else {
+      if (result && result._id) {
+        ctx.logger.info(`[metbook] user-${ctx.state.user.id} updated a meeting book-${result._id}`);
+        ctx.status = 204;
+      } else if (result && result.err) {
         ctx.status = 400;
-        ctx.body = { code: 'error:metbook_not_found', msg: '会议室预约申请不存在' };
+        ctx.body = result;
+      } else {
+        ctx.status = 400;
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async remove(ctx) {
@@ -58,13 +66,15 @@ module.exports = app => {
       if (id) result = await ctx.service.metbook.removeById(id);
       else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
         return;
       }
-      if (result) ctx.status = 204;
-      else {
+      if (result && result.result && result.result.n && result.result.ok) {
+        ctx.logger.info(`[metbook] user-${ctx.state.user.id} removed a meeting book-${result._id}`);
+        ctx.status = 204;
+      } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:metbook_not_found', msg: '会议室预约申请不存在' };
+        ctx.body = ctx.app.config.ERROR.METBOOK.NOEXIST;
       }
     }
   };

@@ -17,11 +17,14 @@ module.exports = app => {
       if (result && result._id) {
         ctx.logger.info(`[material] user-${ctx.state.user.id} created a material-${result._id}`);
         ctx.status = 201;
-        ctx.set('Location', '/api/materials?id=' + result._id);
+        ctx.set('Location', `${ctx.app.config.prefix}/materials?id=${result._id}`);
         ctx.body = { id: result._id };
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async update(ctx) {
@@ -32,9 +35,12 @@ module.exports = app => {
       if (result) {
         ctx.logger.info(`[material] user-${ctx.state.user.id} updated a material-${result._id}`);
         ctx.status = 204;
+      } else if (result && result.err) {
+        ctx.status = 400;
+        ctx.body = result;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:material_not_found', msg: '物资不存在' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
       }
     }
     async remove(ctx) {
@@ -43,15 +49,15 @@ module.exports = app => {
       if (id) result = await ctx.service.material.removeById(id);
       else {
         ctx.status = 400;
-        ctx.body = { code: 'error:bad_request', msg: '参数错误' };
+        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
         return;
       }
-      if (result) {
+      if (result[0] && result[0].result && result[0].result.n && result[0].result.ok) {
         ctx.logger.info(`[material] user-${ctx.state.user.id} removed a material-${result._id}`);
         ctx.status = 204;
       } else {
         ctx.status = 400;
-        ctx.body = { code: 'error:material_not_found', msg: '物资不存在' };
+        ctx.body = ctx.app.config.ERROR.MATERIAL.NOEXIST;
       }
     }
   };

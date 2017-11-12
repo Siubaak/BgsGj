@@ -61,7 +61,7 @@ describe('test/app/service/matbook.test.js', () => {
       returnDate: '2017-01-03',
       materials: [{ material: matId, book: 5 }],
     });
-    assert(result && result.code);
+    assert(result === app.config.ERROR.USER.INSUFFI);
     // 添加用户钱包余额
     await app.model.User.update({ _id: uId[0] }, { $set: { wallet: 10 } });
     // 正常租借申请，并借光所有物品
@@ -87,7 +87,7 @@ describe('test/app/service/matbook.test.js', () => {
       returnDate: '2017-01-03',
       materials: [{ material: matId, book: 1 }],
     });
-    assert(result && result.code);
+    assert(result === app.config.ERROR.MATERIAL.INSUFFI);
     // 添加物品总量
     await app.model.Material.update({ _id: matId }, { $inc: { quantity: app.config.maxMatBooks } });
     // 连续购买，达到最大购买次数,已有两次
@@ -111,7 +111,7 @@ describe('test/app/service/matbook.test.js', () => {
       returnDate: '2017-01-03',
       materials: [{ material: matId, book: 1 }],
     });
-    assert(result && result.code);
+    assert(result === app.config.ERROR.MATBOOK.INSUFFI);
   });
 
   it('should find normally', async () => {
@@ -173,7 +173,7 @@ describe('test/app/service/matbook.test.js', () => {
       _id: matbId,
       cond: 2,
     });
-    assert(result && result.code);
+    assert(result === app.config.ERROR.MATBOOK.INVALID);
   });
 
   it('should remove normally', async () => {

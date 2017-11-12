@@ -49,7 +49,7 @@ describe('test/app/service/user.test.js', () => {
       password: 'test0',
       user: { _id: id, rePhone: '13843278098' },
     });
-    assert(!result);
+    assert(result === app.config.ERROR.USER.INVALID);
     result = await ctx.service.user.update({
       id,
       password: 'test1',

@@ -12,7 +12,7 @@ describe('test/app/controller/note.test.js', () => {
     assert(result === 0);
     app.mockCsrf();
     await app.httpRequest()
-      .get('/api/notes')
+      .get(`${app.config.prefix}/notes`)
       .expect(200)
       .expect([]);
   });
@@ -40,7 +40,7 @@ describe('test/app/controller/note.test.js', () => {
     app.mockCsrf();
     for (let i = 0; i < levelNum; i++) {
       await app.httpRequest()
-        .post('/api/tokens')
+        .post(`${app.config.prefix}/tokens`)
         .send({ account: `test${i}`, password: `test${i}` })
         .expect(201)
         .expect(checkToken);
@@ -50,25 +50,25 @@ describe('test/app/controller/note.test.js', () => {
         case 2:
         case 3:
           await app.httpRequest()
-            .post('/api/notes')
+            .post(`${app.config.prefix}/notes`)
             .set('Authorization', `Bearer ${token[i]}`)
             .send({ title: `test${i}`, content: `test${i}` })
             .expect(403)
-            .expect({ code: 'auth:no_perm', msg: '权限不足' });
+            .expect(app.config.ERROR.USER.NOPERM);
           await app.httpRequest()
-            .get('/api/notes')
+            .get(`${app.config.prefix}/notes`)
             .expect(200)
             .expect([]);
           break;
         case 4:
           await app.httpRequest()
-            .post('/api/notes')
+            .post(`${app.config.prefix}/notes`)
             .set('Authorization', `Bearer ${token[i]}`)
             .send({ title: `test${i}`, content: `test${i}` })
             .expect(201)
             .expect(checkId);
           await app.httpRequest()
-            .get('/api/notes')
+            .get(`${app.config.prefix}/notes`)
             .expect(200)
             .expect(res => assert(res.body.length === 1));
           break;
@@ -78,7 +78,7 @@ describe('test/app/controller/note.test.js', () => {
     }
     for (let i = 5; i < 9; i++) {
       await app.httpRequest()
-        .post('/api/notes')
+        .post(`${app.config.prefix}/notes`)
         .set('Authorization', `Bearer ${token[4]}`)
         .send({ title: `test${i}`, content: `test${i}` })
         .expect(201)
@@ -89,7 +89,7 @@ describe('test/app/controller/note.test.js', () => {
         );
     }
     await app.httpRequest()
-      .get('/api/notes')
+      .get(`${app.config.prefix}/notes`)
       .expect(200)
       .expect(res => assert(res.body.length === 5));
   });
@@ -97,17 +97,17 @@ describe('test/app/controller/note.test.js', () => {
   it('should get normally', async () => {
     app.mockCsrf();
     await app.httpRequest()
-      .get('/api/notes')
+      .get(`${app.config.prefix}/notes`)
       .query({ id, title: 'test5', skip: 2, limit: 2 })
       .expect(200)
       .expect(res => assert(res.body.title === 'test4'));
     await app.httpRequest()
-      .get('/api/notes')
+      .get(`${app.config.prefix}/notes`)
       .query({ title: 'test5', skip: 2, limit: 2 })
       .expect(200)
       .expect(res => assert(res.body.title === 'test5'));
     await app.httpRequest()
-      .get('/api/notes')
+      .get(`${app.config.prefix}/notes`)
       .query({ skip: 2, limit: 2 })
       .expect(200)
       .expect(res => assert(res.body.length === 2 && res.body[0].title === 'test6'));
@@ -122,26 +122,26 @@ describe('test/app/controller/note.test.js', () => {
         case 2:
         case 3:
           await app.httpRequest()
-            .put('/api/notes')
+            .put(`${app.config.prefix}/notes`)
             .set('Authorization', `Bearer ${token[i]}`)
             .send({ _id: id, title: 'update0' })
             .expect(403)
-            .expect({ code: 'auth:no_perm', msg: '权限不足' });
+            .expect(app.config.ERROR.USER.NOPERM);
           await app.httpRequest()
-            .get('/api/notes')
+            .get(`${app.config.prefix}/notes`)
             .query({ id })
             .expect(200)
             .expect(res => assert(res.body.title === 'test4' && res.body.content === 'test4'));
           break;
         case 4:
           await app.httpRequest()
-            .put('/api/notes')
+            .put(`${app.config.prefix}/notes`)
             .set('Authorization', `Bearer ${token[i]}`)
             .send({ _id: id, title: 'update0' })
             .expect(204)
             .expect({});
           await app.httpRequest()
-            .get('/api/notes')
+            .get(`${app.config.prefix}/notes`)
             .query({ id })
             .expect(200)
             .expect(res => assert(res.body.title === 'update0' && res.body.content === 'test4'));
@@ -161,26 +161,26 @@ describe('test/app/controller/note.test.js', () => {
         case 2:
         case 3:
           await app.httpRequest()
-            .del('/api/notes')
+            .del(`${app.config.prefix}/notes`)
             .set('Authorization', `Bearer ${token[i]}`)
             .query({ id })
             .expect(403)
-            .expect({ code: 'auth:no_perm', msg: '权限不足' });
+            .expect(app.config.ERROR.USER.NOPERM);
           await app.httpRequest()
-            .get('/api/notes')
+            .get(`${app.config.prefix}/notes`)
             .query({ id })
             .expect(200)
             .expect(res => assert(res.body.title === 'update0' && res.body.content === 'test4'));
           break;
         case 4:
           await app.httpRequest()
-            .del('/api/notes')
+            .del(`${app.config.prefix}/notes`)
             .set('Authorization', `Bearer ${token[i]}`)
             .query({ id })
             .expect(204)
             .expect({});
           await app.httpRequest()
-            .get('/api/notes')
+            .get(`${app.config.prefix}/notes`)
             .query({ id })
             .expect(200)
             .expect({});
@@ -190,7 +190,7 @@ describe('test/app/controller/note.test.js', () => {
       }
     }
     await app.httpRequest()
-      .get('/api/notes')
+      .get(`${app.config.prefix}/notes`)
       .expect(200)
       .expect(res => assert(res.body.length === 4 && res.body[0].title === 'test5'));
     await app.model.User.remove();

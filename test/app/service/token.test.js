@@ -11,23 +11,23 @@ describe('test/app/service/token.test.js', () => {
 
   it('should not create any tokens', async () => {
     const ctx = app.mockContext();
-    let token = await ctx.service.token.create({ account: 'test', password: 'test' });
-    assert(typeof token !== 'string' && token === null);
-    const result = await app.model.User.create({
+    let result = await ctx.service.token.create({ account: 'test', password: 'test' });
+    assert(result === app.config.ERROR.USER.NOEXIST);
+    result = await app.model.User.create({
       account: 'test',
       password: ctx.helper.sha1('test'),
     });
     assert(result && result._id);
-    token = await ctx.service.token.create({ account: 'test', password: 'test0' });
-    assert(typeof token !== 'string' && token === null);
+    result = await ctx.service.token.create({ account: 'test', password: 'test0' });
+    assert(result === app.config.ERROR.USER.INVALID);
   });
 
   it('should create a token', async () => {
     const ctx = app.mockContext();
-    const token = await ctx.service.token.create({ account: 'test', password: 'test' });
-    assert(typeof token === 'string' && token);
+    let result = await ctx.service.token.create({ account: 'test', password: 'test' });
+    assert(result && typeof result.token === 'string' && result.token);
     await app.model.User.remove();
-    const result = await app.model.User.count();
+    result = await app.model.User.count();
     assert(result === 0);
   });
 });

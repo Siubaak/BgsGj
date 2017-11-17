@@ -17,11 +17,13 @@ module.exports = app => {
         default:
           model = app.model.Metbook.find({ user, cond: { $lt: 2 } });
       }
-      return await model
+      const list = await model
         .populate('user', 'account')
         .sort({ _id: -1 })
         .skip(skip)
         .limit(limit);
+      const total = await app.model.Metbook.count();
+      return { total, list };
     }
     async findById(id) {
       return await app.model.Metbook.findById(id).populate('user', 'account') || {};

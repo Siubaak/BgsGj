@@ -17,12 +17,14 @@ module.exports = app => {
         default:
           model = app.model.Matbook.find({ user, cond: { $lt: 2 } });
       }
-      return await model
+      const list = await model
         .populate('user', 'account')
         .populate('materials.material', 'name')
         .sort({ _id: -1 })
         .skip(skip)
         .limit(limit);
+      const total = await app.model.Matbook.count();
+      return { total, list };
     }
     async findById(id) {
       return await app.model.Matbook.findById(id)

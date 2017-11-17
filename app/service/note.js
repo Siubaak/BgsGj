@@ -6,7 +6,9 @@ module.exports = app => {
       return await app.model.Note.count();
     }
     async find({ skip = 0, limit = 0 }) {
-      return await app.model.Note.find().skip(skip).limit(limit);
+      const list = await app.model.Note.find().skip(skip).limit(limit);
+      const total = await app.model.Note.count();
+      return { total, list };
     }
     async findById(id) {
       return await app.model.Note.findById(id) || {};

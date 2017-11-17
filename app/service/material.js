@@ -13,15 +13,16 @@ module.exports = app => {
         { $group: { _id: '$materials.material', book: { $sum: '$materials.book' } } },
       ]);
       matBooks = this.ctx.helper.arr2Obj(matBooks, '_id', 'book');
-      const materials = await app.model.Material.find()
+      const list = await app.model.Material.find()
         .sort({ type: 1, name: 1 })
         .skip(skip)
         .limit(limit);
-      for (const material of materials) {
+      for (const material of list) {
         material.left = material.quantity;
         if (matBooks[material._id]) material.left -= matBooks[material._id];
       }
-      return materials;
+      const total = await app.model.Material.count();
+      return { total, list };
     }
     async findById(id) {
       return await app.model.Material.findById(id) || {};

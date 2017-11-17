@@ -6,9 +6,11 @@ module.exports = app => {
       return await app.model.User.count();
     }
     async find({ skip = 0, limit = 0 }) {
-      return await app.model.User.find({ level: { $lt: 3 } }, { password: 0 }).sort({ account: 1 })
+      const list = await app.model.User.find({ level: { $lt: 3 } }, { password: 0 }).sort({ account: 1 })
         .skip(skip)
         .limit(limit);
+      const total = await app.model.User.count();
+      return { total, list };
     }
     async findById(_id) {
       return await app.model.User.findOne({ _id }, { password: 0 }) || {};

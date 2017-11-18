@@ -14,7 +14,7 @@ describe('test/app/controller/note.test.js', () => {
     await app.httpRequest()
       .get(`${app.config.prefix}/notes`)
       .expect(200)
-      .expect([]);
+      .expect({ total: 0, list: [] });
   });
 
   it('should post normally', async () => {
@@ -58,7 +58,7 @@ describe('test/app/controller/note.test.js', () => {
           await app.httpRequest()
             .get(`${app.config.prefix}/notes`)
             .expect(200)
-            .expect([]);
+            .expect({ total: 0, list: [] });
           break;
         case 4:
           await app.httpRequest()
@@ -70,7 +70,7 @@ describe('test/app/controller/note.test.js', () => {
           await app.httpRequest()
             .get(`${app.config.prefix}/notes`)
             .expect(200)
-            .expect(res => assert(res.body.length === 1));
+            .expect(res => assert(res.body.list.length === 1));
           break;
         default:
           break;
@@ -91,7 +91,7 @@ describe('test/app/controller/note.test.js', () => {
     await app.httpRequest()
       .get(`${app.config.prefix}/notes`)
       .expect(200)
-      .expect(res => assert(res.body.length === 5));
+      .expect(res => assert(res.body.list.length === 5));
   });
 
   it('should get normally', async () => {
@@ -110,7 +110,7 @@ describe('test/app/controller/note.test.js', () => {
       .get(`${app.config.prefix}/notes`)
       .query({ skip: 2, limit: 2 })
       .expect(200)
-      .expect(res => assert(res.body.length === 2 && res.body[0].title === 'test6'));
+      .expect(res => assert(res.body.list.length === 2 && res.body.list[0].title === 'test6'));
   });
 
   it('should put normally', async () => {
@@ -192,7 +192,7 @@ describe('test/app/controller/note.test.js', () => {
     await app.httpRequest()
       .get(`${app.config.prefix}/notes`)
       .expect(200)
-      .expect(res => assert(res.body.length === 4 && res.body[0].title === 'test5'));
+      .expect(res => assert(res.body.list.length === 4 && res.body.list[0].title === 'test5'));
     await app.model.User.remove();
     let result = await app.model.User.count();
     assert(result === 0);

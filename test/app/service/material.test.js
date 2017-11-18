@@ -101,11 +101,11 @@ describe('test/app/service/material.test.js', () => {
     });
     assert(result && result._id);
     result = await ctx.service.material.find({});
-    assert(result.length === 2 && result[0].left === 4 && result[1].left === 0);
+    assert(result.list.length === 2 && result.list[0].left === 4 && result.list[1].left === 0);
     result = await ctx.service.material.find({ limit: 1 });
-    assert(result.length === 1 && result[0]._id.toString() === id[0]);
+    assert(result.list.length === 1 && result.list[0]._id.toString() === id[0]);
     result = await ctx.service.material.find({ skip: 1 });
-    assert(result.length === 1 && result[0]._id.toString() === id[1]);
+    assert(result.list.length === 1 && result.list[0]._id.toString() === id[1]);
     result = await ctx.service.material.findById(id[0]);
     assert(result && result._id.toString() === id[0]);
   });

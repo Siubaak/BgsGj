@@ -14,7 +14,7 @@ describe('test/app/controller/user.test.js', () => {
     await app.httpRequest()
       .get(`${app.config.prefix}/users`)
       .expect(200)
-      .expect([]);
+      .expect({ total: 0, list: [] });
   });
 
   it('should post normally', async () => {
@@ -55,7 +55,7 @@ describe('test/app/controller/user.test.js', () => {
             .get(`${app.config.prefix}/users`)
             .expect(200)
             // 共5个账号，但管理员不应被查到，故只有3个
-            .expect(res => assert(res.body.length === 3));
+            .expect(res => assert(res.body.list.length === 3));
           break;
         case 4:
           await app.httpRequest()
@@ -72,7 +72,7 @@ describe('test/app/controller/user.test.js', () => {
             .get(`${app.config.prefix}/users`)
             .expect(200)
             // 共6个账号，但管理员不应被查到，故只有4个，且根据account升续排列，故第1个为new4
-            .expect(res => assert(res.body.length === 4 && res.body[0].account === 'new4'));
+            .expect(res => assert(res.body.list.length === 4 && res.body.list[0].account === 'new4'));
           break;
         default:
           break;
@@ -97,7 +97,7 @@ describe('test/app/controller/user.test.js', () => {
       .query({ skip: 1, limit: 2 })
       .expect(200)
       // 共6个账号，但管理员不应被查到，跳过1个限制2个，故只有2个，且根据account升续排列，故第1个为new4
-      .expect(res => assert(res.body.length === 2 && res.body[0].account === 'test0'));
+      .expect(res => assert(res.body.list.length === 2 && res.body.list[0].account === 'test0'));
   });
 
   it('should put normally', async () => {
@@ -248,7 +248,7 @@ describe('test/app/controller/user.test.js', () => {
       .get(`${app.config.prefix}/users`)
       .expect(200)
       // 删掉1个，共5个账号，但管理员不应被查到，故只有3个，且根据account升续排列，故第1个为new4
-      .expect(res => assert(res.body.length === 3 && res.body[0].account === 'new4'));
+      .expect(res => assert(res.body.list.length === 3 && res.body.list[0].account === 'new4'));
     await app.model.User.remove();
     const result = await app.model.User.count();
     assert(result === 0);

@@ -29,13 +29,13 @@ describe('test/app/service/user.test.js', () => {
   it('should find normally', async () => {
     const ctx = app.mockContext();
     let result = await ctx.service.user.find({});
-    assert(result.length === 3 && !result[0].password);
+    assert(result.list.length === 3 && !result.list[0].password);
     result = await ctx.service.user.find({ skip: 1 });
-    assert(result.length === 2 && !result[0].password);
+    assert(result.list.length === 2 && !result.list[0].password);
     result = await ctx.service.user.find({ limit: 1 });
-    assert(result.length === 1 && !result[0].password);
+    assert(result.list.length === 1 && !result.list[0].password);
     result = await ctx.service.user.find({ skip: 1, limit: 1 });
-    assert(result.length === 1 && result[0]._id.toString() === id && !result[0].password);
+    assert(result.list.length === 1 && result.list[0]._id.toString() === id && !result.list[0].password);
     result = await ctx.service.user.findById(id);
     assert(result && result.account === 'test1' && !result.password);
     result = await ctx.service.user.findByAccount('test1');

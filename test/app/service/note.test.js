@@ -27,11 +27,11 @@ describe('test/app/service/note.test.js', () => {
     let result = await ctx.service.note.find({});
     assert(result.list.length === 2);
     result = await ctx.service.note.find({ skip: 1 });
-    assert(result.list.length === 1);
+    assert(result.list.length === 1 && result.list[0]._id.toString() !== id);
     result = await ctx.service.note.find({ limit: 1 });
-    assert(result.list.length === 1);
-    result = await ctx.service.note.find({ skip: 1, limit: 1 });
     assert(result.list.length === 1 && result.list[0]._id.toString() === id);
+    result = await ctx.service.note.find({ skip: 1, limit: 1 });
+    assert(result.list.length === 1 && result.list[0]._id.toString() !== id);
     result = await ctx.service.note.findById(id);
     assert(result && result.title === 'test1');
     result = await ctx.service.note.findByTitle('test1');

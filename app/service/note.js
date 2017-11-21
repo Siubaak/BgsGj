@@ -6,7 +6,11 @@ module.exports = app => {
       return await app.model.Note.count();
     }
     async find({ skip = 0, limit = 0 }) {
-      const list = await app.model.Note.find().skip(skip).limit(limit);
+      const list = await app.model.Note
+        .find()
+        .sort({ updated: -1 })
+        .skip(skip)
+        .limit(limit);
       const total = await app.model.Note.count();
       return { total, list };
     }
@@ -17,9 +21,11 @@ module.exports = app => {
       return await app.model.Note.findOne({ title }) || {};
     }
     async create(note) {
+      note.updated = Date.now();
       return await app.model.Note.create(note);
     }
     async update(note) {
+      note.updated = Date.now();
       return await app.model.Note.findOneAndUpdate({ _id: note._id }, { $set: note }, { new: true });
     }
     async removeById(_id) {

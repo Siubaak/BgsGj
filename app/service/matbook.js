@@ -6,24 +6,23 @@ module.exports = app => {
       return await app.model.Matbook.count();
     }
     async find({ user, skip = 0, limit = 0 }) {
-      let model;
+      let query;
       switch (user) {
         case undefined:
-          model = app.model.Matbook.find();
           break;
         case 'back':
-          model = app.model.Matbook.find({ cond: { $lt: 2 } });
+          query = { cond: { $lt: 2 } };
           break;
         default:
-          model = app.model.Matbook.find({ user, cond: { $lt: 2 } });
+          query = { user, cond: { $lt: 2 } };
       }
-      const list = await model
+      const list = await app.model.Matbook.find(query)
         .populate('user', 'account')
         .populate('materials.material', 'name')
         .sort({ _id: -1 })
         .skip(skip)
         .limit(limit);
-      const total = await app.model.Matbook.count();
+      const total = await app.model.Matbook.count(query);
       return { total, list };
     }
     async findById(id) {
@@ -62,7 +61,10 @@ module.exports = app => {
       if (matBook.cond) {
         const matB = await app.model.Matbook.findById(matBook._id);
         if (!matB) return app.config.ERROR.MATBOOK.NOEXIST;
-        if (matB.cond > matBook.cond) return app.config.ERROR.MATBOOK.INVALID;
+        if (matB.cond > matBook.cond
+          || matB.cond === 0 && matBook.cond === 2
+          || matB.cond === 1 && matBook.cond === 3
+          || matB.cond === 2 || matB.cond === 3) return app.config.ERROR.MATBOOK.INVALID;
         if (matB.cond === 0 && matBook.cond === 3) {
           await app.model.User.update({ _id: matB.user }, { $inc: { wallet: matB.price } });
         }

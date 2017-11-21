@@ -5,7 +5,8 @@ module.exports = () => {
     try {
       await next();
       if (ctx.status === 404) ctx.body = ctx.app.config.ERROR.SERVER.NOTFUND;
-    } catch (e) {
+    } catch (err) {
+      ctx.logger.error(`[err] ${err}`);
       ctx.status = 500;
       ctx.body = ctx.app.config.ERROR.SERVER.INERROR;
     }

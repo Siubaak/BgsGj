@@ -6,23 +6,22 @@ module.exports = app => {
       return await app.model.Metbook.count();
     }
     async find({ user, skip = 0, limit = 0 }) {
-      let model;
+      let query;
       switch (user) {
         case undefined:
-          model = app.model.Metbook.find();
           break;
         case 'back':
-          model = app.model.Metbook.find({ cond: { $lt: 2 } });
+          query = { cond: { $lt: 2 } };
           break;
         default:
-          model = app.model.Metbook.find({ user, cond: { $lt: 2 } });
+          query = { user, cond: { $lt: 2 } };
       }
-      const list = await model
+      const list = await app.model.Metbook.find(query)
         .populate('user', 'account')
         .sort({ _id: -1 })
         .skip(skip)
         .limit(limit);
-      const total = await app.model.Metbook.count();
+      const total = await app.model.Metbook.count(query);
       return { total, list };
     }
     async findById(id) {
@@ -40,7 +39,10 @@ module.exports = app => {
       if (metBook.cond) {
         const metB = await app.model.Metbook.findById(metBook._id);
         if (!metB) return app.config.ERROR.METBOOK.NOEXIST;
-        if (metB.cond > metBook.cond) return app.config.ERROR.METBOOK.INVALID;
+        if (metB.cond > metBook.cond
+          || metB.cond === 0 && metBook.cond === 2
+          || metB.cond === 1 && metBook.cond === 3
+          || metB.cond === 2 || metB.cond === 3) return app.config.ERROR.METBOOK.INVALID;
       }
       return await app.model.Metbook.findOneAndUpdate({ _id: metBook._id }, { $set: metBook }, { new: true });
     }

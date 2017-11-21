@@ -192,7 +192,7 @@ describe('test/app/controller/note.test.js', () => {
     await app.httpRequest()
       .get(`${app.config.prefix}/notes`)
       .expect(200)
-      .expect(res => assert(res.body.list.length === 4 && res.body.list[0].title === 'test5'));
+      .expect(res => assert(res.body.list.length === 4 && res.body.list[0].title === 'test8'));
     await app.model.User.remove();
     let result = await app.model.User.count();
     assert(result === 0);

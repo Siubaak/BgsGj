@@ -10,6 +10,7 @@ module.exports = app => {
       const now = new Date();
       const today = now.toLocaleString().split(' ')[0];
       await ctx.service.meeting.schedule(today);
+      ctx.logger.info('[schd] all metbooks today are returned');
     },
   };
 };

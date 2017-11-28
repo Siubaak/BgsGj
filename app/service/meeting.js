@@ -6,6 +6,7 @@ module.exports = app => {
       const times = {};
       const metBooks = await app.model.Metbook.find({ cond: { $lt: 2 } });
       metBooks.forEach(metBook => { times[`${metBook.date}-${metBook.time}`] = true; });
+      times.isMeetingAvailable = app.config.isMeetingAvailable;
       times.isProjAvailable = app.config.isProjAvailable;
       return times;
     }

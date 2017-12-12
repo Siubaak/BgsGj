@@ -50,14 +50,10 @@ module.exports = app => {
       }
     }
     async remove(ctx) {
-      const { id } = ctx.query;
-      let result;
-      if (id) result = await ctx.service.user.removeById(id);
-      else {
-        ctx.status = 400;
-        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
-        return;
-      }
+      ctx.validate({
+        _id: { type: 'string' },
+      });
+      const result = await ctx.service.user.removeById(ctx.request.body._id);
       if (result[0] && result[0].result && result[0].result.n && result[0].result.ok) {
         ctx.logger.info(`[user] user-${ctx.state.user.id} removed a user-${result._id}`);
         ctx.status = 204;

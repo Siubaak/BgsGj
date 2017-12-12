@@ -218,7 +218,7 @@ describe('test/app/controller/user.test.js', () => {
           await app.httpRequest()
             .del(`${app.config.prefix}/users`)
             .set('Authorization', `Bearer ${token[i]}`)
-            .query({ id: id[0] })
+            .send({ _id: id[0] })
             .expect(403)
             .expect(app.config.ERROR.USER.NOPERM);
           await app.httpRequest()
@@ -231,7 +231,7 @@ describe('test/app/controller/user.test.js', () => {
           await app.httpRequest()
             .del(`${app.config.prefix}/users`)
             .set('Authorization', `Bearer ${token[i]}`)
-            .query({ id: id[0] })
+            .send({ _id: id[0] })
             .expect(204)
             .expect({});
           await app.httpRequest()

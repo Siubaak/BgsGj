@@ -62,14 +62,10 @@ module.exports = app => {
       }
     }
     async remove(ctx) {
-      const { id } = ctx.query;
-      let result;
-      if (id) result = await ctx.service.metbook.removeById(id);
-      else {
-        ctx.status = 400;
-        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
-        return;
-      }
+      ctx.validate({
+        _id: { type: 'string' },
+      });
+      const result = await ctx.service.metbook.removeById(ctx.request.body._id);
       if (result && result.result && result.result.n && result.result.ok) {
         ctx.logger.info(`[matbook] user-${ctx.state.user.id} removed a material book-${result._id}`);
         ctx.status = 204;

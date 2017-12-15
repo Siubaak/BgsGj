@@ -5,7 +5,7 @@ module.exports = app => {
     async count() {
       return await app.model.Material.count();
     }
-    async find({ skip = 0, limit = 0 }) {
+    async find({ enable = false, skip = 0, limit = 0 }) {
       let matBooks = await app.model.Matbook.aggregate([
         { $match: { cond: { $lt: 2 } } },
         { $project: { materials: 1 } },
@@ -13,7 +13,9 @@ module.exports = app => {
         { $group: { _id: '$materials.material', book: { $sum: '$materials.book' } } },
       ]);
       matBooks = this.ctx.helper.arr2Obj(matBooks, '_id', 'book');
-      const list = await app.model.Material.find()
+      let query;
+      if (enable) query = { enable: true };
+      const list = await app.model.Material.find(query)
         .sort({ type: 1, name: 1 })
         .skip(skip)
         .limit(limit);

@@ -3,8 +3,19 @@
 module.exports = app => {
   return class extends app.Controller {
     async get(ctx) {
-      const { skip, limit } = ctx.query;
-      const result = await ctx.service.material.find({ skip: Number(skip), limit: Number(limit) });
+      const { id, skip, limit } = ctx.query;
+      let result;
+      if (id) result = await ctx.service.material.findById(id);
+      else {
+        const query = { skip: Number(skip), limit: Number(limit) };
+        switch (ctx.state.user.level) {
+          case 4:
+            break;
+          default:
+            query.enable = true;
+        }
+        result = await ctx.service.material.find(query);
+      }
       ctx.status = 200;
       ctx.body = result;
     }

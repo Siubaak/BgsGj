@@ -5,6 +5,7 @@ module.exports = app => {
     title: { type: String, required: true },
     content: { type: String, required: true },
     updated: { type: Date, required: true },
+    enable: { type: Boolean, default: true },
   });
   return app.mongoose.model('Note', NoteSchema);
 };

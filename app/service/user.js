@@ -5,11 +5,14 @@ module.exports = app => {
     async count() {
       return await app.model.User.count();
     }
-    async find({ skip = 0, limit = 0 }) {
-      const list = await app.model.User.find({ level: { $lt: 3 } }, { password: 0 }).sort({ account: 1 })
+    async find({ all = true, skip = 0, limit = 0 }) {
+      let query;
+      if (!all) query = { level: { $lt: 3 } };
+      const list = await app.model.User.find(query, { password: 0 })
+        .sort({ level: -1, account: 1 })
         .skip(skip)
         .limit(limit);
-      const total = await app.model.User.count();
+      const total = await app.model.User.count(query);
       return { total, list };
     }
     async findById(_id) {
@@ -19,13 +22,14 @@ module.exports = app => {
       return await app.model.User.findOne({ account }, { password: 0 }) || {};
     }
     async create(user) {
+      if (user.level && user.level > 3) {
+        const adminNum = await app.model.User.count({ level: { $gt: 3 } });
+        if (adminNum) return app.config.ERROR.USER.INVALID;
+      }
       user.password = this.ctx.helper.sha1(user.password);
       return await app.model.User.create(user);
     }
-    async update({ id, password, user }) {
-      const info = await app.model.User.findById(id);
-      if (!info) return app.config.ERROR.USER.NOEXIST;
-      if (this.ctx.helper.sha1(password) !== info.password) return app.config.ERROR.USER.INVALID;
+    async update(user) {
       return await app.model.User.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
     }
     async removeById(_id) {

@@ -51,8 +51,8 @@ user: {
   wallet: { type: Number, default: 0 }, // 用户钱包，管理员用户可设置为零
   // 权限分级，0为未审核用户，1为已审核研分会用户，2为已审核研会用户，3为普通管理员，4为超级管理员
   level: { type: Number, enum: [ 0, 1, 2, 3, 4 ], default: 0 },
-  reName: String, // 账号负责人姓名
-  rePhone: String, // 账号负责人电话
+  name: String, // 账号负责人姓名
+  phone: String, // 账号负责人电话
   created: Date,  // 用户常见时间
   lastSeen: Date, // 用户最后登录时间
 }

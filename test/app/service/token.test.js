@@ -19,7 +19,7 @@ describe('test/app/service/token.test.js', () => {
     });
     assert(result && result._id);
     result = await ctx.service.token.create({ account: 'test', password: 'test0' });
-    assert(result === app.config.ERROR.USER.INVALID);
+    assert(result === app.config.ERROR.USER.WPASSWD);
   });
 
   it('should create a token', async () => {

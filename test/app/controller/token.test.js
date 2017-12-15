@@ -26,7 +26,7 @@ describe('test/app/controller/token.test.js', () => {
       .post(`${app.config.prefix}/tokens`)
       .send({ account: 'test', password: 'test0' })
       .expect(400)
-      .expect(app.config.ERROR.USER.INVALID);
+      .expect(app.config.ERROR.USER.WPASSWD);
   });
 
   it('should create a token', async () => {

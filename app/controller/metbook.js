@@ -48,6 +48,7 @@ module.exports = app => {
       ctx.validate({
         _id: { type: 'string' },
       });
+      ctx.helper.delProps(ctx.request.body, [ 'user', 'date', 'time' ]);
       const result = await ctx.service.metbook.update(ctx.request.body);
       if (result && result._id) {
         ctx.logger.info(`[metbook] user-${ctx.state.user.id} updated a meeting book-${result._id}`);

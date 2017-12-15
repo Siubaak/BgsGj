@@ -7,7 +7,13 @@ module.exports = app => {
       let result;
       if (id) result = await ctx.service.note.findById(id);
       else if (title) result = await ctx.service.note.findByTitle(title);
-      else result = await ctx.service.note.find({ skip: Number(skip), limit: Number(limit) });
+      else result = await ctx.service.note.find({ enable: true, skip: Number(skip), limit: Number(limit) });
+      ctx.status = 200;
+      ctx.body = result;
+    }
+    async aget(ctx) {
+      const { skip, limit } = ctx.query;
+      const result = await ctx.service.note.find({ skip: Number(skip), limit: Number(limit) });
       ctx.status = 200;
       ctx.body = result;
     }

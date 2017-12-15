@@ -5,13 +5,15 @@ module.exports = app => {
     async count() {
       return await app.model.Note.count();
     }
-    async find({ skip = 0, limit = 0 }) {
+    async find({ enable = false, skip = 0, limit = 0 }) {
+      let query;
+      if (enable) query = { enable: true };
       const list = await app.model.Note
-        .find()
+        .find(query)
         .sort({ updated: -1 })
         .skip(skip)
         .limit(limit);
-      const total = await app.model.Note.count();
+      const total = await app.model.Note.count(query);
       return { total, list };
     }
     async findById(id) {

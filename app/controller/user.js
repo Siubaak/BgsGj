@@ -7,7 +7,13 @@ module.exports = app => {
       let result;
       if (id) result = await ctx.service.user.findById(id);
       else if (account) result = await ctx.service.user.findByAccount(account);
-      else result = await ctx.service.user.find({ skip: Number(skip), limit: Number(limit) });
+      else result = await ctx.service.user.find({ all: false, skip: Number(skip), limit: Number(limit) });
+      ctx.status = 200;
+      ctx.body = result;
+    }
+    async aget(ctx) {
+      const { skip, limit } = ctx.query;
+      const result = await ctx.service.user.find({ skip: Number(skip), limit: Number(limit) });
       ctx.status = 200;
       ctx.body = result;
     }
@@ -32,11 +38,18 @@ module.exports = app => {
     }
     async update(ctx) {
       ctx.validate({
-        id: { type: 'string' },
-        password: { type: 'string' },
-        user: { type: 'object' },
+        _id: { type: 'string' },
       });
-      if (ctx.state.user.level < 4) ctx.request.body.user._id = ctx.request.body.id;
+      if (ctx.state.user.level < 4) {
+        if (ctx.request.body._id !== ctx.state.user._id.toString()) {
+          ctx.status = 403;
+          ctx.body = ctx.app.config.ERROR.USER.NOPERM;
+          return;
+        }
+        ctx.helper.delProps(ctx.request.body, [ 'account', 'wallet', 'level' ]);
+      } else if (ctx.request.body._id === ctx.state.user._id.toString()) {
+        ctx.helper.delProps(ctx.request.body, [ 'account', 'wallet', 'level' ]);
+      }
       const result = await ctx.service.user.update(ctx.request.body);
       if (result && result._id) {
         ctx.logger.info(`[user] user-${ctx.state.user.id} updated a user-${result._id}`);
@@ -53,6 +66,11 @@ module.exports = app => {
       ctx.validate({
         _id: { type: 'string' },
       });
+      if (ctx.request.body._id === ctx.state.user._id.toString()) {
+        ctx.status = 400;
+        ctx.body = ctx.app.config.ERROR.USER.INVALID;
+        return;
+      }
       const result = await ctx.service.user.removeById(ctx.request.body._id);
       if (result[0] && result[0].result && result[0].result.n && result[0].result.ok) {
         ctx.logger.info(`[user] user-${ctx.state.user.id} removed a user-${result._id}`);

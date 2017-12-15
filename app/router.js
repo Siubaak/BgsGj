@@ -23,6 +23,7 @@ module.exports = app => {
   app.put(`${app.config.prefix}/meetings`, perm(3), app.controller.meeting.update);
   // 通知note资源api
   app.get(`${app.config.prefix}/notes`, app.controller.note.get);
+  app.get(`${app.config.prefix}/anotes`, perm(4), app.controller.note.aget);
   app.post(`${app.config.prefix}/notes`, perm(4), app.controller.note.create);
   app.put(`${app.config.prefix}/notes`, perm(4), app.controller.note.update);
   app.del(`${app.config.prefix}/notes`, perm(4), app.controller.note.remove);
@@ -30,6 +31,7 @@ module.exports = app => {
   app.post(`${app.config.prefix}/tokens`, app.controller.token.create);
   // 用户user资源api
   app.get(`${app.config.prefix}/users`, app.controller.user.get);
+  app.get(`${app.config.prefix}/ausers`, perm(4), app.controller.user.aget);
   app.post(`${app.config.prefix}/users`, perm(4), app.controller.user.create);
   app.put(`${app.config.prefix}/users`, perm([ 0, 1, 2, 4 ]), app.controller.user.update);
   app.del(`${app.config.prefix}/users`, perm(4), app.controller.user.remove);

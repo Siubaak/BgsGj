@@ -29,12 +29,14 @@ describe('test/app/service/user.test.js', () => {
   it('should find normally', async () => {
     const ctx = app.mockContext();
     let result = await ctx.service.user.find({});
+    assert(result.list.length === 4 && !result.list[0].password);
+    result = await ctx.service.user.find({ all: false });
     assert(result.list.length === 3 && !result.list[0].password);
-    result = await ctx.service.user.find({ skip: 1 });
+    result = await ctx.service.user.find({ all: false, skip: 1 });
     assert(result.list.length === 2 && !result.list[0].password);
-    result = await ctx.service.user.find({ limit: 1 });
+    result = await ctx.service.user.find({ all: false, limit: 1 });
     assert(result.list.length === 1 && !result.list[0].password);
-    result = await ctx.service.user.find({ skip: 1, limit: 1 });
+    result = await ctx.service.user.find({ all: false, skip: 1, limit: 1 });
     assert(result.list.length === 1 && result.list[0]._id.toString() === id && !result.list[0].password);
     result = await ctx.service.user.findById(id);
     assert(result && result.account === 'test1' && !result.password);
@@ -44,18 +46,11 @@ describe('test/app/service/user.test.js', () => {
 
   it('should update normally', async () => {
     const ctx = app.mockContext();
-    let result = await ctx.service.user.update({
-      id,
-      password: 'test0',
-      user: { _id: id, rePhone: '13843278098' },
+    const result = await ctx.service.user.update({
+      _id: id,
+      phone: '13843278098',
     });
-    assert(result === app.config.ERROR.USER.INVALID);
-    result = await ctx.service.user.update({
-      id,
-      password: 'test1',
-      user: { _id: id, rePhone: '13843278098' },
-    });
-    assert(result && result.rePhone === '13843278098');
+    assert(result && result.phone === '13843278098');
   });
 
   it('should remove normally', async () => {

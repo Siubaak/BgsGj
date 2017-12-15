@@ -158,12 +158,6 @@ describe('test/app/service/matbook.test.js', () => {
     const ctx = app.mockContext();
     let result = await ctx.service.matbook.update({
       _id: matbId,
-      price: 0,
-      remark: 'test',
-    });
-    assert(result && result.price !== 0 && result.remark === 'test');
-    result = await ctx.service.matbook.update({
-      _id: matbId,
       cond: 3,
     });
     assert(result && result.cond === 3);

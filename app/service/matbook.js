@@ -57,7 +57,6 @@ module.exports = app => {
       return await app.model.Matbook.create(matBook);
     }
     async update(matBook) {
-      this.ctx.helper.delProps(matBook, [ 'user', 'price', 'takeDate', 'returnDate', 'materials' ]);
       if (matBook.cond) {
         const matB = await app.model.Matbook.findById(matBook._id);
         if (!matB) return app.config.ERROR.MATBOOK.NOEXIST;

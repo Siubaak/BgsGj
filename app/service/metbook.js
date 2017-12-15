@@ -37,7 +37,6 @@ module.exports = app => {
       return app.model.Metbook.create(metBook);
     }
     async update(metBook) {
-      this.ctx.helper.delProps(metBook, [ 'user', 'date', 'time' ]);
       if (metBook.cond) {
         const metB = await app.model.Metbook.findById(metBook._id);
         if (!metB) return app.config.ERROR.METBOOK.NOEXIST;

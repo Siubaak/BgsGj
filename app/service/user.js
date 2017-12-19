@@ -30,6 +30,11 @@ module.exports = app => {
       return await app.model.User.create(user);
     }
     async update(user) {
+      if (user.level && user.level > 3) {
+        const adminNum = await app.model.User.count({ level: { $gt: 3 } });
+        if (adminNum) return app.config.ERROR.USER.INVALID;
+      }
+      if (user.password) user.password = this.ctx.helper.sha1(user.password);
       return await app.model.User.findOneAndUpdate({ _id: user._id }, { $set: user }, { new: true });
     }
     async removeById(_id) {

@@ -33,6 +33,6 @@ module.exports = app => {
   app.get(`${app.config.prefix}/users`, app.controller.user.get);
   app.get(`${app.config.prefix}/ausers`, perm(4), app.controller.user.aget);
   app.post(`${app.config.prefix}/users`, perm(4), app.controller.user.create);
-  app.put(`${app.config.prefix}/users`, perm([ 0, 1, 2, 4 ]), app.controller.user.update);
+  app.put(`${app.config.prefix}/users`, perm(0), app.controller.user.update);
   app.del(`${app.config.prefix}/users`, perm(4), app.controller.user.remove);
 };

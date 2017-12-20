@@ -20,7 +20,6 @@ module.exports = app => {
         .skip(skip)
         .limit(limit);
       for (const material of list) {
-        material.left = material.quantity;
         if (matBooks[material._id]) material.left -= matBooks[material._id];
       }
       const total = await app.model.Material.count();

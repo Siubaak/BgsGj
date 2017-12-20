@@ -9,5 +9,7 @@ module.exports = app => {
     price: { type: Number, default: 0 },
     enable: { type: Boolean, default: true },
   });
+  MaterialSchema.virtual('left').get(function() { return this.quantity; });
+  MaterialSchema.set('toJSON', { virtuals: true });
   return app.mongoose.model('Material', MaterialSchema);
 };

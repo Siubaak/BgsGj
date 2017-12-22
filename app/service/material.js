@@ -33,7 +33,7 @@ module.exports = app => {
       return await app.model.Material.create(material);
     }
     async update(material) {
-      material.left = material.quantity;
+      if (typeof material.quantity === 'number') material.left = material.quantity;
       return await app.model.Material.findOneAndUpdate({ _id: material._id }, { $set: material }, { new: true });
     }
     async removeById(_id) {

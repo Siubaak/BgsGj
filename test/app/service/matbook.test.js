@@ -143,11 +143,11 @@ describe('test/app/service/matbook.test.js', () => {
     });
     assert(result && result._id);
     result = await ctx.service.matbook.find({});
-    assert(result.list.length === 6 && result.list[0].name === 'newBook1');
+    assert(result.list.length === 6 && result.list[0].name === 'newBook0');
     result = await ctx.service.matbook.find({ limit: 1 });
-    assert(result.list.length === 1 && result.list[0].name === 'newBook1');
+    assert(result.list.length === 1 && result.list[0].name === 'newBook0');
     result = await ctx.service.matbook.find({ skip: 1 });
-    assert(result.list.length === 5 && result.list[0].name === 'newBook0');
+    assert(result.list.length === 5 && result.list[0].name === 'fillBook1');
     result = await ctx.service.matbook.find({ user: 'back' });
     assert(result.list.length === 5 && result.list[0].name === 'newBook0');
     result = await ctx.service.matbook.find({ user: uId[1] });

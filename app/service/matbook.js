@@ -19,7 +19,7 @@ module.exports = app => {
       const list = await app.model.Matbook.find(query)
         .populate('user', 'account')
         .populate('materials.material', 'name')
-        .sort({ _id: -1 })
+        .sort({ cond: 1, _id: -1 })
         .skip(skip)
         .limit(limit);
       const total = await app.model.Matbook.count(query);

@@ -18,7 +18,7 @@ module.exports = app => {
       }
       const list = await app.model.Metbook.find(query)
         .populate('user', 'account')
-        .sort({ _id: -1 })
+        .sort({ cond: 1, _id: -1 })
         .skip(skip)
         .limit(limit);
       const total = await app.model.Metbook.count(query);

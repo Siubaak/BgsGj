@@ -4,7 +4,7 @@
   "description": "Api server of BgsGj",
   "private": true,
   "dependencies": {
-    "egg": "^1.8.0",
+    "egg": "^2.0.0",
     "egg-jwt": "^2.2.0",
     "egg-mongoose": "^2.1.1",
     "egg-scripts": "^1.2.0",

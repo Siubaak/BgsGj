@@ -3,7 +3,7 @@
 module.exports = app => {
   return class extends app.Controller {
     async get(ctx) {
-      const result = await ctx.service.meeting.find();
+      const result = await ctx.service.meeting.find(ctx.query);
       ctx.status = 200;
       ctx.body = result;
     }

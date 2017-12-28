@@ -2,13 +2,16 @@
 
 module.exports = app => {
   return class extends app.Service {
-    async find() {
-      const times = {};
-      const metBooks = await app.model.Metbook.find({ cond: { $lt: 2 } });
-      metBooks.forEach(metBook => { times[`${metBook.date}-${metBook.time}`] = true; });
-      times.enable = app.config.isMeetingAvailable;
-      times.proj = app.config.isProjAvailable;
-      return times;
+    async find({ settings = false }) {
+      const result = {};
+      if (settings) {
+        result.enable = app.config.isMeetingAvailable;
+        result.proj = app.config.isProjAvailable;
+      } else {
+        const metBooks = await app.model.Metbook.find({ cond: { $lt: 2 } });
+        metBooks.forEach(metBook => { result[`${metBook.date}${metBook.time}`] = true; });
+      }
+      return result;
     }
     async update(meeting) {
       app.config.isMeetingAvailable = meeting.enable;

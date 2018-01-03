@@ -39,8 +39,8 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1506565858794_5840';
   config.middleware = [ 'errhandler' ];
   config.security = { csrf: { ignoreJSON: true } };
-  // 挂载路径，默认为/api
-  config.prefix = '/api';
+  // API服务器挂载路径，默认为根目录
+  config.prefix = '';
   // 常用错误状态
   config.ERROR = {
     USER: {

@@ -66,7 +66,7 @@ describe('test/app/controller/user.test.js', () => {
             .expect(res =>
               assert(typeof res.body.id === 'string'
                 && res.body.id
-                && res.headers.location === `/api/users?id=${res.body.id}`)
+                && res.headers.location === `${app.config.prefix}/users?id=${res.body.id}`)
             );
           await app.httpRequest()
             .get(`${app.config.prefix}/users`)

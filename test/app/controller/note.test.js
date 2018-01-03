@@ -35,7 +35,7 @@ describe('test/app/controller/note.test.js', () => {
     const checkId = res => {
       assert(typeof res.body.id === 'string' && res.body.id);
       id = res.body.id;
-      assert(res.headers.location === `/api/notes?id=${id}`);
+      assert(res.headers.location === `${app.config.prefix}/notes?id=${id}`);
     };
     app.mockCsrf();
     for (let i = 0; i < levelNum; i++) {
@@ -85,7 +85,7 @@ describe('test/app/controller/note.test.js', () => {
         .expect(res =>
           assert(typeof res.body.id === 'string'
             && res.body.id
-            && res.headers.location === `/api/notes?id=${res.body.id}`)
+            && res.headers.location === `${app.config.prefix}/notes?id=${res.body.id}`)
         );
     }
     await app.httpRequest()

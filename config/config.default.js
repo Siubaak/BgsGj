@@ -12,8 +12,6 @@ module.exports = appInfo => {
   };
   // JWT密钥
   config.jwtSecret = 'test';
-  // 用户默认密码
-  config.usrDePass = '123456';
   // 用户及管理员token过期天数
   config.expiry = 14;
   // 允许最大物资申请及会议室预约数量

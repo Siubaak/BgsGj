@@ -6,8 +6,8 @@ module.exports = app => {
   // 物资申请matbook资源api
   app.get(`${app.config.prefix}/matbooks`, perm(1), app.controller.matbook.get);
   app.post(`${app.config.prefix}/matbooks`, perm([ 1, 2 ]), app.controller.matbook.create);
-  app.put(`${app.config.prefix}/matbooks`, perm(3), app.controller.matbook.update);
-  app.del(`${app.config.prefix}/matbooks`, perm([ 1, 2, 4 ]), app.controller.matbook.remove);
+  app.put(`${app.config.prefix}/matbooks`, perm(1), app.controller.matbook.update);
+  app.del(`${app.config.prefix}/matbooks`, perm(4), app.controller.matbook.remove);
   // 物资material资源api
   app.get(`${app.config.prefix}/materials`, perm([ 1, 2, 4 ]), app.controller.material.get);
   app.post(`${app.config.prefix}/materials`, perm(4), app.controller.material.create);
@@ -16,8 +16,8 @@ module.exports = app => {
   // 会议室预约metbook资源api
   app.get(`${app.config.prefix}/metbooks`, perm(2), app.controller.metbook.get);
   app.post(`${app.config.prefix}/metbooks`, perm([ 2 ]), app.controller.metbook.create);
-  app.put(`${app.config.prefix}/metbooks`, perm(3), app.controller.metbook.update);
-  app.del(`${app.config.prefix}/metbooks`, perm([ 2, 4 ]), app.controller.metbook.remove);
+  app.put(`${app.config.prefix}/metbooks`, perm(2), app.controller.metbook.update);
+  app.del(`${app.config.prefix}/metbooks`, perm(4), app.controller.metbook.remove);
   // 会议室meeting资源api
   app.get(`${app.config.prefix}/meetings`, perm(2), app.controller.meeting.get);
   app.put(`${app.config.prefix}/meetings`, perm(3), app.controller.meeting.update);

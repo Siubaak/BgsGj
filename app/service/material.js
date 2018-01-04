@@ -28,13 +28,21 @@ module.exports = app => {
     async findById(id) {
       return await app.model.Material.findById(id) || {};
     }
+    async settings() {
+      return {
+        enable: app.config.isMaterialAvailable,
+      };
+    }
     async create(material) {
       material.left = material.quantity;
       return await app.model.Material.create(material);
     }
     async update(material) {
-      if (typeof material.quantity === 'number') material.left = material.quantity;
-      return await app.model.Material.findOneAndUpdate({ _id: material._id }, { $set: material }, { new: true });
+      if (typeof material.enable === 'boolean') app.config.isMaterialAvailable = material.enable;
+      else {
+        if (typeof material.quantity === 'number') material.left = material.quantity;
+        return await app.model.Material.findOneAndUpdate({ _id: material._id }, { $set: material }, { new: true });
+      }
     }
     async removeById(_id) {
       return await Promise.all([

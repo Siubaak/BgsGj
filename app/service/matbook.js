@@ -32,6 +32,7 @@ module.exports = app => {
         || {};
     }
     async create(matBook) {
+      if (!app.config.isMaterialAvailable) return app.config.ERROR.MATERIAL.INVALID;
       const matBooksNum = await app.model.Matbook.count({ user: matBook.user, cond: { $lt: 2 } });
       if (matBooksNum >= app.config.maxMatBooks) return app.config.ERROR.MATBOOK.INSUFFI;
       let matBooks = await app.model.Matbook.aggregate([

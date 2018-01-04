@@ -28,7 +28,7 @@ module.exports = app => {
       return await app.model.Metbook.findById(id).populate('user', 'account') || {};
     }
     async create(metBook) {
-      if (!app.config.isMeetingAvailable) return app.config.ERROR.MEETING.NOEXIST;
+      if (!app.config.isMeetingAvailable) return app.config.ERROR.MEETING.INVALID;
       const metBooksNum = await app.model.Metbook.count({ user: metBook.user, cond: { $lt: 2 } });
       if (metBooksNum >= app.config.maxMetBooks) return app.config.ERROR.METBOOK.INSUFFI;
       const isBook = await app.model.Metbook.findOne({ date: metBook.date, time: metBook.time, cond: { $lt: 2 } });

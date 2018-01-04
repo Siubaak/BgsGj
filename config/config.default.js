@@ -17,7 +17,8 @@ module.exports = appInfo => {
   // 允许最大物资申请及会议室预约数量
   config.maxMatBooks = 4;
   config.maxMetBooks = 4;
-  // 会议室是否开放、投影仪是否能用
+  // 物资是否开放申请，会议室是否开放、投影仪是否能用
+  config.isMaterialAvailable = true;
   config.isMeetingAvailable = true;
   config.isProjAvailable = true;
   // 每天处理会议室归还时间，六个数字格式如下
@@ -57,6 +58,7 @@ module.exports = appInfo => {
     MATERIAL: {
       NOEXIST: { err: '20', msg: '物资不存在' },
       INSUFFI: { err: '21', msg: '数量不足' },
+      INVALID: { err: '22', msg: '物资暂停借用' },
     },
     MATBOOK: {
       NOEXIST: { err: '30', msg: '申请不存在' },
@@ -66,6 +68,7 @@ module.exports = appInfo => {
     MEETING: {
       NOEXIST: { err: '40', msg: '会议室不开放' },
       INSUFFI: { err: '41', msg: '时间段已被预约' },
+      INVALID: { err: '42', msg: '会议室暂停预约' },
     },
     METBOOK: {
       NOEXIST: { err: '50', msg: '预约不存在' },

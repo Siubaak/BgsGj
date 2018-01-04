@@ -3,9 +3,10 @@
 module.exports = app => {
   return class extends app.Controller {
     async get(ctx) {
-      const { id, skip, limit } = ctx.query;
+      const { settings, id, skip, limit } = ctx.query;
       let result;
-      if (id) result = await ctx.service.material.findById(id);
+      if (settings) result = await ctx.service.material.settings();
+      else if (id) result = await ctx.service.material.findById(id);
       else {
         const query = { skip: Number(skip), limit: Number(limit) };
         switch (ctx.state.user.level) {
@@ -39,19 +40,25 @@ module.exports = app => {
       }
     }
     async update(ctx) {
-      ctx.validate({
-        _id: { type: 'string' },
-      });
-      const result = await ctx.service.material.update(ctx.request.body);
-      if (result) {
-        ctx.logger.info(`[material] user-${ctx.state.user.id} updated a material-${result._id}`);
+      if (typeof ctx.request.body.enable === 'boolean') {
+        await ctx.service.material.update({ enable: ctx.request.body.enable });
+        ctx.logger.info(`[material] user-${ctx.state.user.id} updated material settings`);
         ctx.status = 204;
-      } else if (result && result.err) {
-        ctx.status = 400;
-        ctx.body = result;
       } else {
-        ctx.status = 400;
-        ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
+        ctx.validate({
+          _id: { type: 'string' },
+        });
+        const result = await ctx.service.material.update(ctx.request.body);
+        if (result) {
+          ctx.logger.info(`[material] user-${ctx.state.user.id} updated a material-${result._id}`);
+          ctx.status = 204;
+        } else if (result && result.err) {
+          ctx.status = 400;
+          ctx.body = result;
+        } else {
+          ctx.status = 400;
+          ctx.body = ctx.app.config.ERROR.SERVER.BADREQ;
+        }
       }
     }
     async remove(ctx) {

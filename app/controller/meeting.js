@@ -3,7 +3,10 @@
 module.exports = app => {
   return class extends app.Controller {
     async get(ctx) {
-      const result = await ctx.service.meeting.find(ctx.query);
+      const { settings } = ctx.query;
+      let result;
+      if (settings) result = await ctx.service.meeting.settings();
+      else result = await ctx.service.meeting.find();
       ctx.status = 200;
       ctx.body = result;
     }
@@ -13,7 +16,7 @@ module.exports = app => {
         proj: { type: 'boolean' },
       });
       await ctx.service.meeting.update(ctx.request.body);
-      ctx.logger.info(`[meeting] user-${ctx.state.user.id} updated meeting`);
+      ctx.logger.info(`[meeting] user-${ctx.state.user.id} updated meeting settings`);
       ctx.status = 204;
     }
   };

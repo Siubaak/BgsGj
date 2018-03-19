@@ -34,13 +34,26 @@ module.exports = app => {
       };
     }
     async create(material) {
+      const quantity = Number(material.quantity);
+      if (isNaN(quantity)) {
+        material.quantity = 0;
+      } else {
+        material.quantity = quantity;
+      }
       material.left = material.quantity;
       return await app.model.Material.create(material);
     }
     async update(material) {
       if (typeof material.enable === 'boolean') app.config.isMaterialAvailable = material.enable;
       else {
-        if (typeof material.quantity === 'number') material.left = material.quantity;
+        const quantity = Number(material.quantity);
+        if (isNaN(quantity)) {
+          delete material.quantity;
+          delete material.left;
+        } else {
+          material.quantity = quantity;
+          material.left = quantity;
+        }
         return await app.model.Material.findOneAndUpdate({ _id: material._id }, { $set: material }, { new: true });
       }
     }

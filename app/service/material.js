@@ -22,7 +22,7 @@ module.exports = app => {
       for (const material of list) {
         if (matBooks[material._id]) material.left -= matBooks[material._id];
       }
-      const total = await app.model.Material.count();
+      const total = await app.model.Material.count(query);
       return { total, list };
     }
     async findById(id) {

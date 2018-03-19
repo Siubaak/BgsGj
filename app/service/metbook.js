@@ -31,6 +31,8 @@ module.exports = app => {
       if (!app.config.isMeetingAvailable) return app.config.ERROR.MEETING.INVALID;
       const metBooksNum = await app.model.Metbook.count({ user: metBook.user, cond: { $lt: 2 } });
       if (metBooksNum >= app.config.maxMetBooks) return app.config.ERROR.METBOOK.INSUFFI;
+      let isBook = false;
+      
       const isBook = await app.model.Metbook.findOne({ date: metBook.date, time: metBook.time, cond: { $lt: 2 } });
       if (isBook) return app.config.ERROR.MEETING.INSUFFI;
       if (!app.config.isProjAvailable) metBook.proj = false;

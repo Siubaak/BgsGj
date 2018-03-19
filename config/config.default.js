@@ -20,7 +20,6 @@ module.exports = appInfo => {
   // 物资是否开放申请，会议室是否开放、投影仪是否能用
   config.isMaterialAvailable = true;
   config.isMeetingAvailable = true;
-  config.isProjAvailable = true;
   // 每天处理会议室归还时间，六个数字格式如下
   // 秒（0-59，可选） 分（0-59） 时（0-23） 日期（1-31） 月份（1-12） 星期（0-7，0或7均为星期天）
   // 其中*为任意或者所有

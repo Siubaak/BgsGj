@@ -19,8 +19,10 @@ module.exports = app => {
   app.put(`${app.config.prefix}/metbooks`, perm(2), app.controller.metbook.update);
   app.del(`${app.config.prefix}/metbooks`, perm(4), app.controller.metbook.remove);
   // 会议室meeting资源api
-  app.get(`${app.config.prefix}/meetings`, perm(2), app.controller.meeting.get);
-  app.put(`${app.config.prefix}/meetings`, perm(3), app.controller.meeting.update);
+  app.get(`${app.config.prefix}/meetings`, perm([ 2, 4 ]), app.controller.meeting.get);
+  app.put(`${app.config.prefix}/meetings`, perm(4), app.controller.meeting.create);
+  app.put(`${app.config.prefix}/meetings`, perm(4), app.controller.meeting.update);
+  app.put(`${app.config.prefix}/meetings`, perm(4), app.controller.meeting.remove);
   // 通知note资源api
   app.get(`${app.config.prefix}/notes`, app.controller.note.get);
   app.get(`${app.config.prefix}/anotes`, perm(4), app.controller.note.aget);

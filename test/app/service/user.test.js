@@ -5,9 +5,8 @@ let id;
 
 describe('test/app/service/user.test.js', () => {
   it('should have no users', async () => {
-    const ctx = app.mockContext();
     await app.model.User.remove();
-    const result = await ctx.service.user.count();
+    const result = await app.model.User.count();
     assert(result === 0);
   });
 
@@ -22,7 +21,7 @@ describe('test/app/service/user.test.js', () => {
     assert(result && result._id);
     result = await ctx.service.user.create({ account: 'test2', password: 'test2', level: 4 });
     assert(result && result._id);
-    result = await ctx.service.user.count();
+    result = await app.model.User.count();
     assert(result === 4);
   });
 
@@ -56,10 +55,10 @@ describe('test/app/service/user.test.js', () => {
   it('should remove normally', async () => {
     const ctx = app.mockContext();
     await ctx.service.user.removeById(id);
-    let result = await ctx.service.user.count();
+    let result = await app.model.User.count();
     assert(result === 3);
     await app.model.User.remove();
-    result = await ctx.service.user.count();
+    result = await app.model.User.count();
     assert(result === 0);
   });
 });

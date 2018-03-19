@@ -2,9 +2,6 @@
 
 module.exports = app => {
   return class extends app.Service {
-    async count() {
-      return await app.model.User.count();
-    }
     async find({ all = true, skip = 0, limit = 0 }) {
       let query;
       if (!all) query = { level: { $lt: 3 } };

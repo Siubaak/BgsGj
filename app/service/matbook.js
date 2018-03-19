@@ -2,9 +2,6 @@
 
 module.exports = app => {
   return class extends app.Service {
-    async count() {
-      return await app.model.Matbook.count();
-    }
     async find({ user, skip = 0, limit = 0 }) {
       let query;
       switch (user) {

@@ -2,9 +2,6 @@
 
 module.exports = app => {
   return class extends app.Service {
-    async count() {
-      return await app.model.Note.count();
-    }
     async find({ enable = false, skip = 0, limit = 0 }) {
       let query;
       if (enable) query = { enable: true };

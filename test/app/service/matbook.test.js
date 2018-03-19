@@ -7,9 +7,8 @@ let matbId;
 
 describe('test/app/service/matbook.test.js', () => {
   it('should have no material books', async () => {
-    const ctx = app.mockContext();
     await app.model.Matbook.remove();
-    let result = await ctx.service.matbook.count();
+    let result = await app.model.Matbook.count();
     assert(result === 0);
     await app.model.Material.remove();
     result = await app.model.Material.count();
@@ -173,10 +172,10 @@ describe('test/app/service/matbook.test.js', () => {
   it('should remove normally', async () => {
     const ctx = app.mockContext();
     await ctx.service.matbook.removeById(matbId);
-    let result = await ctx.service.matbook.count();
+    let result = await app.model.Matbook.count();
     assert(result === 5);
     await app.model.Matbook.remove();
-    result = await ctx.service.matbook.count();
+    result = await app.model.Matbook.count();
     assert(result === 0);
     await app.model.Material.remove();
     result = await app.model.Material.count();

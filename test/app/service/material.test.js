@@ -5,12 +5,11 @@ const id = [];
 
 describe('test/app/service/material.test.js', () => {
   it('should have no materials', async () => {
-    const ctx = app.mockContext();
     await app.model.Matbook.remove();
     let result = await app.model.Matbook.count();
     assert(result === 0);
     await app.model.Material.remove();
-    result = await ctx.service.material.count();
+    result = await app.model.Material.count();
     assert(result === 0);
   });
 
@@ -34,7 +33,7 @@ describe('test/app/service/material.test.js', () => {
     });
     assert(result && result._id);
     id.push(result._id.toString());
-    result = await ctx.service.material.count();
+    result = await app.model.Material.count();
     assert(result === 2);
   });
 
@@ -122,10 +121,10 @@ describe('test/app/service/material.test.js', () => {
   it('should remove normally', async () => {
     const ctx = app.mockContext();
     await ctx.service.material.removeById(id[0]);
-    let result = await ctx.service.material.count();
+    let result = await app.model.Material.count();
     assert(result === 1);
     await app.model.Material.remove();
-    result = await ctx.service.material.count();
+    result = await app.model.Material.count();
     assert(result === 0);
     await app.model.Matbook.remove();
     result = await app.model.Matbook.count();

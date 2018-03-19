@@ -5,9 +5,8 @@ let id;
 
 describe('test/app/service/note.test.js', () => {
   it('should have no notes', async () => {
-    const ctx = app.mockContext();
     await app.model.Note.remove();
-    const result = await ctx.service.note.count();
+    const result = await app.model.Note.count();
     assert(result === 0);
   });
 
@@ -18,7 +17,7 @@ describe('test/app/service/note.test.js', () => {
     result = await ctx.service.note.create({ title: 'test1', content: 'test1' });
     assert(result && result._id);
     id = result._id.toString();
-    result = await ctx.service.note.count();
+    result = await app.model.Note.count();
     assert(result === 2);
   });
 
@@ -50,10 +49,10 @@ describe('test/app/service/note.test.js', () => {
   it('should remove normally', async () => {
     const ctx = app.mockContext();
     await ctx.service.note.removeById(id);
-    let result = await ctx.service.note.count();
+    let result = await app.model.Note.count();
     assert(result === 1);
     await app.model.Note.remove();
-    result = await ctx.service.note.count();
+    result = await app.model.Note.count();
     assert(result === 0);
   });
 });

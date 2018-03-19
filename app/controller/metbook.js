@@ -27,8 +27,9 @@ module.exports = app => {
         user: { type: 'string' },
         name: { type: 'string' },
         phone: { type: 'string' },
+        meeting: { type: 'string' },
         date: { type: 'string' },
-        time: { type: 'string' },
+        books: { type: 'array' },
       });
       const result = await ctx.service.metbook.create(ctx.request.body);
       if (result && result._id) {

@@ -26,11 +26,14 @@ module.exports = app => {
     }
     async create(metBook) {
       if (!app.config.isMeetingAvailable) return app.config.ERROR.MEETING.INVALID;
+      const meeting = await app.model.Meeting.findOne({ _id: metBook.meeting });
+      if (!meeting) return app.config.ERROR.MEETING.NOEXIST;
+      if (!meeting.enable) return app.config.ERROR.MEETING.INVALID;
       const metBooksNum = await app.model.Metbook.count({ user: metBook.user, cond: { $lt: 2 } });
       if (metBooksNum >= app.config.maxMetBooks) return app.config.ERROR.METBOOK.INSUFFI;
-      const isBook = await app.model.Metbook.findOne({ date: metBook.date, time: metBook.time, cond: { $lt: 2 } });
+      const isBook = await app.model.Metbook.findOne({ date: metBook.date, books: metBook.time, cond: { $lt: 2 } });
       if (isBook) return app.config.ERROR.MEETING.INSUFFI;
-      if (!app.config.isProjAvailable) metBook.proj = false;
+      if (!meeting.proj) metBook.proj = false;
       return app.model.Metbook.create(metBook);
     }
     async update(metBook) {

@@ -42,15 +42,22 @@ module.exports = app => {
       return await app.model.Meeting.create(meeting);
     }
     async update(meeting) {
-      if (typeof meeting.enable === 'boolean') app.config.isMeetingAvailable = meeting.enable;
-      else {
-        return await app.model.Meeting.findOneAndUpdate({ _id: meeting._id }, { $set: meeting }, { new: true });
-      }
+      return await app.model.Meeting.findOneAndUpdate({ _id: meeting._id }, { $set: meeting }, { new: true });
+    }
+    async removeById(_id) {
+      return await Promise.all([
+        app.model.Meeting.remove({ _id }),
+        app.model.Metbook.remove({ meeting: _id }),
+      ]);
     }
     async schedule(today) {
-      const meetings = await app.model.Meeting.find({ enable: true });
+      const meetings = await app.model.Meeting.find();
       for (const meeting of meetings) {
-        await app.model.Metbook.update({ meeting: meeting._id, date: today, cond: { $lt: 2 } }, { $set: { cond: 2 } }, { multi: true });
+        await app.model.Metbook.update({
+          meeting: meeting._id,
+          date: today,
+          cond: { $lt: 2 },
+        }, { $set: { cond: 2 } }, { multi: true });
       }
     }
   };

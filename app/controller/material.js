@@ -40,8 +40,8 @@ module.exports = app => {
       }
     }
     async update(ctx) {
-      if (typeof ctx.request.body.enable === 'boolean') {
-        await ctx.service.material.update({ enable: ctx.request.body.enable });
+      if (typeof ctx.request.body.gEnable === 'boolean') {
+        app.config.isMaterialAvailable = ctx.request.body.gEnable;
         ctx.logger.info(`[material] user-${ctx.state.user.id} updated material settings`);
         ctx.status = 204;
       } else {

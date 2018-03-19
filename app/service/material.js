@@ -2,9 +2,6 @@
 
 module.exports = app => {
   return class extends app.Service {
-    async count() {
-      return await app.model.Material.count();
-    }
     async find({ enable = false, skip = 0, limit = 0 }) {
       let matBooks = await app.model.Matbook.aggregate([
         { $match: { cond: { $lt: 2 } } },
@@ -44,18 +41,15 @@ module.exports = app => {
       return await app.model.Material.create(material);
     }
     async update(material) {
-      if (typeof material.enable === 'boolean') app.config.isMaterialAvailable = material.enable;
-      else {
-        const quantity = Number(material.quantity);
-        if (isNaN(quantity)) {
-          delete material.quantity;
-          delete material.left;
-        } else {
-          material.quantity = quantity;
-          material.left = quantity;
-        }
-        return await app.model.Material.findOneAndUpdate({ _id: material._id }, { $set: material }, { new: true });
+      const quantity = Number(material.quantity);
+      if (isNaN(quantity)) {
+        delete material.quantity;
+        delete material.left;
+      } else {
+        material.quantity = quantity;
+        material.left = quantity;
       }
+      return await app.model.Material.findOneAndUpdate({ _id: material._id }, { $set: material }, { new: true });
     }
     async removeById(_id) {
       return await Promise.all([

@@ -26,9 +26,7 @@ module.exports = app => {
       return await app.model.Material.findById(id) || {};
     }
     async settings() {
-      return {
-        enable: app.config.isMaterialAvailable,
-      };
+      return { gEnable: app.config.isMaterialAvailable };
     }
     async create(material) {
       const quantity = Number(material.quantity);

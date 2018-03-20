@@ -15,6 +15,7 @@ module.exports = app => {
       }
       const list = await app.model.Metbook.find(query)
         .populate('user', 'account')
+        .populate('meeting', 'name')
         .sort({ cond: 1, _id: -1 })
         .skip(skip)
         .limit(limit);
@@ -22,7 +23,9 @@ module.exports = app => {
       return { total, list };
     }
     async findById(id) {
-      return await app.model.Metbook.findById(id).populate('user', 'account') || {};
+      return await app.model.Metbook.findById(id)
+        .populate('user', 'account')
+        .populate('meeting', 'name') || {};
     }
     async create(metBook) {
       if (!app.config.isMeetingAvailable) return app.config.ERROR.MEETING.INVALID;
@@ -31,8 +34,11 @@ module.exports = app => {
       if (!meeting.enable) return app.config.ERROR.MEETING.INVALID;
       const metBooksNum = await app.model.Metbook.count({ user: metBook.user, cond: { $lt: 2 } });
       if (metBooksNum >= app.config.maxMetBooks) return app.config.ERROR.METBOOK.INSUFFI;
-      const isBook = await app.model.Metbook.findOne({ date: metBook.date, books: metBook.time, cond: { $lt: 2 } });
-      if (isBook) return app.config.ERROR.MEETING.INSUFFI;
+      for (const time of metBook.books) {
+        if (meeting.times.indexOf(time) === -1) return app.config.ERROR.MEETING.WRTIME;
+        const isBook = await app.model.Metbook.findOne({ date: metBook.date, books: time, cond: { $lt: 2 } });
+        if (isBook) return app.config.ERROR.MEETING.INSUFFI;
+      }
       if (!meeting.proj) metBook.proj = false;
       return app.model.Metbook.create(metBook);
     }

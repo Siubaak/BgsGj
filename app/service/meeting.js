@@ -19,13 +19,11 @@ module.exports = app => {
         .skip(skip)
         .limit(limit);
       if (metBooks) {
-        console.log(metBooks);
         for (const meeting of list) {
           if (metBooks[meeting._id]) {
             meeting.times = meeting.times.filter(time => metBooks[meeting._id].indexOf(time) === -1);
           }
         }
-        console.log(list);
       }
       const total = await app.model.Meeting.count(query);
       return { total, list };
@@ -34,9 +32,7 @@ module.exports = app => {
       return await app.model.Meeting.findById(id) || {};
     }
     async settings() {
-      return {
-        enable: app.config.isMeetingAvailable,
-      };
+      return { gEnable: app.config.isMeetingAvailable };
     }
     async create(meeting) {
       return await app.model.Meeting.create(meeting);

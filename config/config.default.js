@@ -46,10 +46,10 @@ module.exports = appInfo => {
     USER: {
       NOEXIST: { err: '00', msg: '用户不存在' },
       INSUFFI: { err: '01', msg: '余额不足' },
-      WPASSWD: { err: '02', msg: '密码错误' },
-      NOPERM: { err: '03', msg: '权限不足' },
-      EXPIRY: { err: '04', msg: '授权过期' },
-      INVALID: { err: '05', msg: '非法操作' },
+      INVALID: { err: '02', msg: '非法操作' },
+      WPASSWD: { err: '03', msg: '密码错误' },
+      NOPERM: { err: '04', msg: '权限不足' },
+      EXPIRY: { err: '05', msg: '授权过期' },
     },
     NOTE: {
       NOEXIST: { err: '10', msg: '用户不存在' },
@@ -65,9 +65,10 @@ module.exports = appInfo => {
       INVALID: { err: '32', msg: '非法状态更新' },
     },
     MEETING: {
-      NOEXIST: { err: '40', msg: '会议室不开放' },
+      NOEXIST: { err: '40', msg: '会议室不存在' },
       INSUFFI: { err: '41', msg: '时间段已被预约' },
       INVALID: { err: '42', msg: '会议室暂停预约' },
+      WRTIME: { err: '43', msg: '非法时间段' },
     },
     METBOOK: {
       NOEXIST: { err: '50', msg: '预约不存在' },

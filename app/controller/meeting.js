@@ -3,12 +3,12 @@
 module.exports = app => {
   return class extends app.Controller {
     async get(ctx) {
-      const { settings, id, skip, limit } = ctx.query;
+      const { settings, id, skip, limit, date } = ctx.query;
       let result;
       if (settings) result = await ctx.service.meeting.settings();
       else if (id) result = await ctx.service.meeting.findById(id);
       else {
-        const query = { skip: Number(skip), limit: Number(limit) };
+        const query = { skip: Number(skip), limit: Number(limit), date };
         switch (ctx.state.user.level) {
           case 4:
             break;

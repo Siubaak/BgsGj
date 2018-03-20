@@ -3,7 +3,7 @@ const setCusConfig = require('./config');
 
 module.exports = appInfo => {
   const config = exports = {};
-  
+
   setCusConfig(config);
 
   config.keys = appInfo.name + '_1506565858794_5840';
@@ -52,6 +52,6 @@ module.exports = appInfo => {
     },
   };
 
-  
+
   return config;
 };
